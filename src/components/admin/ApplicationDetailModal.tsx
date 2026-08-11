@@ -28,7 +28,12 @@ export const ApplicationDetailModal: React.FC<ApplicationDetailModalProps> = ({
         {/* Header */}
         <div className="bg-[#0B1D3A] text-white p-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/uds-logo.png" alt="UDS Crest" className="w-8 h-8 object-contain" />
+            <img
+              src="/uds-logo.png"
+              alt="UDS Crest"
+              style={{ maxWidth: '32px', maxHeight: '32px', width: 'auto', height: 'auto', objectFit: 'contain' }}
+              className="w-8 h-8 shrink-0"
+            />
             <div>
               <span className="text-[10px] uppercase tracking-widest text-[#C59B27] font-bold">
                 Application Detail Inspector

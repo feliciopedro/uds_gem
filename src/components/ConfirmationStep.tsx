@@ -49,12 +49,14 @@ export const ConfirmationStep: React.FC = () => {
             <img
               src="/uds-logo.png"
               alt="UDS Crest"
-              className="w-10 h-10 object-contain"
+              style={{ maxWidth: '44px', maxHeight: '44px', width: 'auto', height: 'auto', objectFit: 'contain' }}
+              className="w-10 h-10 shrink-0"
             />
             <img
               src="/iiss-logo.png"
               alt="IISS Emblem"
-              className="w-10 h-10 object-contain"
+              style={{ maxWidth: '44px', maxHeight: '44px', width: 'auto', height: 'auto', objectFit: 'contain' }}
+              className="w-10 h-10 shrink-0"
             />
             <div>
               <h3 className="text-sm font-extrabold text-[#0B1D3A] uppercase tracking-wider">

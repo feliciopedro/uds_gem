@@ -183,8 +183,18 @@ export default function AdminDashboardPage() {
         {/* Top Navbar */}
         <header className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <img src="/uds-logo.png" alt="UDS Crest" className="w-10 h-10 object-contain" />
-            <img src="/iiss-logo.png" alt="IISS Emblem" className="w-10 h-10 object-contain" />
+            <img
+              src="/uds-logo.png"
+              alt="UDS Crest"
+              style={{ maxWidth: '40px', maxHeight: '40px', width: 'auto', height: 'auto', objectFit: 'contain' }}
+              className="w-10 h-10 shrink-0"
+            />
+            <img
+              src="/iiss-logo.png"
+              alt="IISS Emblem"
+              style={{ maxWidth: '40px', maxHeight: '40px', width: 'auto', height: 'auto', objectFit: 'contain' }}
+              className="w-10 h-10 shrink-0"
+            />
             <div>
               <h1 className="text-base font-extrabold text-[#0B1D3A] uppercase tracking-wider">
                 NSCDP Admin Dashboard

@@ -11,7 +11,8 @@ export const Header: React.FC = () => {
           <img
             src="/uds-logo.png"
             alt="University for Development Studies Logo"
-            className="w-9 h-9 object-contain"
+            style={{ maxWidth: '44px', maxHeight: '44px', width: 'auto', height: 'auto', objectFit: 'contain' }}
+            className="w-9 h-9 shrink-0"
           />
           <div className="text-left leading-tight">
             <span className="block text-[11px] font-bold tracking-wider text-[#0B1D3A]">
@@ -30,7 +31,8 @@ export const Header: React.FC = () => {
           <img
             src="/iiss-logo.png"
             alt="Institute for Intelligence and Strategic Security Logo"
-            className="w-9 h-9 object-contain"
+            style={{ maxWidth: '44px', maxHeight: '44px', width: 'auto', height: 'auto', objectFit: 'contain' }}
+            className="w-9 h-9 shrink-0"
           />
           <div className="text-left leading-tight">
             <span className="block text-[11px] font-bold tracking-wider text-[#0B1D3A]">
