@@ -4,6 +4,12 @@ import React, { useState } from 'react';
 import { useFormContext } from '@/context/FormContext';
 import { CreditCard, ArrowLeft, ShieldCheck, Lock, CheckCircle2, AlertCircle } from 'lucide-react';
 
+declare global {
+  interface Window {
+    PaystackPop: any;
+  }
+}
+
 export const PaymentStep: React.FC = () => {
   const { formData, setCurrentStep, completeSimulatedPayment, draftId } = useFormContext();
   const { applicantCategory, personalInfo, programType } = formData;
@@ -11,6 +17,21 @@ export const PaymentStep: React.FC = () => {
   const [paymentError, setPaymentError] = useState('');
 
   const feeAmount = applicantCategory === 'Local Applicant' ? 'GHS 150' : 'USD 15';
+
+  const loadPaystackScript = (): Promise<boolean> => {
+    return new Promise((resolve) => {
+      if (typeof window !== 'undefined' && window.PaystackPop) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://js.paystack.co/v1/inline.js';
+      script.async = true;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
 
   const handlePaystackPayment = async () => {
     setIsProcessing(true);
@@ -31,17 +52,63 @@ export const PaymentStep: React.FC = () => {
       const data = await response.json();
 
       if (response.ok && data.success && data.authorization_url) {
-        // Redirect to Paystack Official Checkout Popup / Window
-        window.location.href = data.authorization_url;
+        // Load Paystack Inline JS
+        const scriptLoaded = await loadPaystackScript();
+
+        const publicKey =
+          process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY ||
+          'pk_test_ff1c8839a07718b5527123ceec8184ec21480c7d';
+
+        if (scriptLoaded && window.PaystackPop) {
+          const handler = window.PaystackPop.setup({
+            key: publicKey,
+            email: personalInfo.email || 'applicant@nscdp.uds.edu.gh',
+            amount: applicantCategory === 'Foreign Applicant' ? 1500 : 15000,
+            currency: applicantCategory === 'Foreign Applicant' ? 'USD' : 'GHS',
+            ref: data.reference,
+            metadata: {
+              draftId: draftId || null,
+              applicant_name: `${personalInfo.firstName} ${personalInfo.surname}`,
+              phone: personalInfo.phone,
+            },
+            onClose: () => {
+              setIsProcessing(false);
+              setPaymentError('Payment window closed before completing transaction.');
+            },
+            callback: async (response: any) => {
+              console.log('Paystack Inline Success Callback:', response);
+              // Verify payment on server
+              const verifyRes = await fetch('/api/paystack/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  reference: response.reference || data.reference,
+                  draftId,
+                }),
+              });
+
+              const verifyData = await verifyRes.json();
+              if (verifyRes.ok && verifyData.success) {
+                await completeSimulatedPayment();
+              } else {
+                setPaymentError(verifyData.error || 'Payment verification failed.');
+              }
+              setIsProcessing(false);
+            },
+          });
+          handler.openIframe();
+        } else {
+          // Fallback to Paystack Standard Authorization URL redirect
+          window.location.href = data.authorization_url;
+        }
       } else {
-        // Fallback to simulated payment verification
-        console.warn('Paystack live initialization returned notice, using simulation mode:', data);
+        // Fallback simulation mode
         await completeSimulatedPayment();
+        setIsProcessing(false);
       }
     } catch (err: any) {
-      console.warn('Paystack payment trigger fallback active:', err);
+      console.warn('Paystack trigger exception, using fallback:', err);
       await completeSimulatedPayment();
-    } finally {
       setIsProcessing(false);
     }
   };
@@ -49,7 +116,7 @@ export const PaymentStep: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Step Banner */}
-      <div className="bg-[#0B1D3A] text-white p-5 rounded-lg shadow">
+      <div className="bg-[#0B1D3A] text-[#ffffff] p-5 rounded-lg shadow">
         <div className="flex items-center justify-between">
           <div>
             <span className="text-xs uppercase tracking-widest text-[#C59B27] font-semibold">
@@ -65,7 +132,7 @@ export const PaymentStep: React.FC = () => {
       </div>
 
       {/* Fee Breakdown Card */}
-      <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm space-y-4">
+      <div className="bg-[#ffffff] border border-gray-200 rounded-lg p-5 shadow-sm space-y-4">
         <h3 className="text-xs font-bold uppercase tracking-wider text-[#0B1D3A]">
           Payment Overview
         </h3>
@@ -137,12 +204,12 @@ export const PaymentStep: React.FC = () => {
           type="button"
           disabled={isProcessing}
           onClick={handlePaystackPayment}
-          className="w-full sm:w-2/3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3.5 px-6 rounded-md shadow-md transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider disabled:opacity-50"
+          className="w-full sm:w-2/3 bg-emerald-700 hover:bg-emerald-800 text-[#ffffff] font-bold py-3.5 px-6 rounded-md shadow-md transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider disabled:opacity-50"
         >
           {isProcessing ? (
             <span className="flex items-center gap-2">
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              Redirecting to Paystack...
+              Opening Paystack Checkout...
             </span>
           ) : (
             <>
