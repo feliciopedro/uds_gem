@@ -88,32 +88,51 @@ CREATE TABLE IF NOT EXISTS admin_users (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
 );
 
--- Index for fast lookup
-CREATE INDEX IF NOT EXISTS idx_applications_email ON applications(email);
-CREATE INDEX IF NOT EXISTS idx_applications_app_number ON applications(application_number);
-CREATE INDEX IF NOT EXISTS idx_applications_status ON applications(application_status);
-CREATE INDEX IF NOT EXISTS idx_applications_sms_status ON applications(sms_status);
-CREATE INDEX IF NOT EXISTS idx_admin_users_email ON admin_users(email);
-
--- Immutable Audit Logs Table
+-- Immutable Applicant Audit Logs Table
 CREATE TABLE IF NOT EXISTS application_audit_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     application_id UUID REFERENCES applications(id) ON DELETE CASCADE,
-    action VARCHAR(100) NOT NULL, -- 'DRAFT_CREATED', 'PAYMENT_VERIFIED', 'ADMIN_ADDED'
+    action VARCHAR(100) NOT NULL,
     details JSONB NOT NULL,
     timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
     entry_hash VARCHAR(64) NOT NULL
 );
 
--- Append-Only Protection Triggers for Audit Logs
+-- Immutable Admin Audit Logs Table (Admin Trail)
+CREATE TABLE IF NOT EXISTS admin_audit_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    admin_email VARCHAR(255) NOT NULL,
+    action VARCHAR(100) NOT NULL, -- 'ADMIN_LOGIN', 'ADMIN_USER_CREATED', 'VIEWED_APPLICATION', 'EXPORTED_CSV'
+    target_resource VARCHAR(255),
+    details JSONB NOT NULL,
+    timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+    entry_hash VARCHAR(64) NOT NULL
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_applications_email ON applications(email);
+CREATE INDEX IF NOT EXISTS idx_applications_app_number ON applications(application_number);
+CREATE INDEX IF NOT EXISTS idx_applications_status ON applications(application_status);
+CREATE INDEX IF NOT EXISTS idx_applications_sms_status ON applications(sms_status);
+CREATE INDEX IF NOT EXISTS idx_admin_users_email ON admin_users(email);
+CREATE INDEX IF NOT EXISTS idx_admin_audit_logs_email ON admin_audit_logs(admin_email);
+CREATE INDEX IF NOT EXISTS idx_admin_audit_logs_action ON admin_audit_logs(action);
+
+-- Append-Only Protection Triggers for Application Audit Logs
 CREATE OR REPLACE FUNCTION enforce_audit_append_only()
 RETURNS TRIGGER AS $$
 BEGIN
-    RAISE EXCEPTION 'Audit logs table % is append-only. UPDATE and DELETE operations are prohibited.', TG_TABLE_NAME;
+    RAISE EXCEPTION 'Table % is immutable and append-only. UPDATE and DELETE are prohibited.', TG_TABLE_NAME;
 END;
 $$ LANGUAGE plpgsql;
 
 DROP TRIGGER IF EXISTS trg_audit_no_update_delete ON application_audit_logs;
 CREATE TRIGGER trg_audit_no_update_delete
 BEFORE UPDATE OR DELETE ON application_audit_logs
+FOR EACH ROW EXECUTE FUNCTION enforce_audit_append_only();
+
+-- Append-Only Protection Trigger for Admin Audit Logs
+DROP TRIGGER IF EXISTS trg_admin_audit_no_update_delete ON admin_audit_logs;
+CREATE TRIGGER trg_admin_audit_no_update_delete
+BEFORE UPDATE OR DELETE ON admin_audit_logs
 FOR EACH ROW EXECUTE FUNCTION enforce_audit_append_only();

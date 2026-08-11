@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { SupabaseApplicationRow } from '@/types/application';
 import { ApplicationDetailModal } from '@/components/admin/ApplicationDetailModal';
 import { AdminUserManagementModal } from '@/components/admin/AdminUserManagementModal';
+import { AdminAuditTrailModal } from '@/components/admin/AdminAuditTrailModal';
 import {
   Users,
   BookOpen,
@@ -21,6 +22,7 @@ import {
   Clock,
   Shield,
   UserPlus,
+  ShieldAlert,
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
@@ -43,8 +45,26 @@ export default function AdminDashboardPage() {
 
   const [selectedApplication, setSelectedApplication] = useState<SupabaseApplicationRow | null>(null);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
 
   const router = useRouter();
+
+  const logAdminAction = async (action: string, target_resource: string, details?: any) => {
+    try {
+      await fetch('/api/admin/audit-logs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          admin_email: 'admin@uds.edu.gh',
+          action,
+          target_resource,
+          details: details || {},
+        }),
+      });
+    } catch (e) {
+      console.warn('Audit log trigger warning:', e);
+    }
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -147,6 +167,10 @@ export default function AdminDashboardPage() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    logAdminAction('EXPORTED_CSV', 'Applications CSV Report', {
+      exported_count: filteredApplications.length,
+    });
   };
 
   const handleLogout = () => {
@@ -172,6 +196,13 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsAuditModalOpen(true)}
+              className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white px-3 py-1.5 rounded-md text-xs font-bold shadow transition-all border border-slate-700"
+            >
+              <ShieldAlert className="w-3.5 h-3.5 text-[#C59B27]" />
+              <span>Audit Trail</span>
+            </button>
             <button
               onClick={() => setIsAdminModalOpen(true)}
               className="flex items-center gap-1.5 bg-[#0B1D3A] hover:bg-[#102a43] text-white px-3 py-1.5 rounded-md text-xs font-bold shadow transition-all"
@@ -432,7 +463,13 @@ export default function AdminDashboardPage() {
                         </td>
                         <td className="py-3 px-3 text-right">
                           <button
-                            onClick={() => setSelectedApplication(app)}
+                            onClick={() => {
+                              setSelectedApplication(app);
+                              logAdminAction('VIEWED_APPLICATION', app.application_number || 'DRAFT Application', {
+                                applicant_name: fullName,
+                                email: app.email,
+                              });
+                            }}
                             className="bg-slate-100 hover:bg-[#0B1D3A] hover:text-white text-slate-700 px-2.5 py-1 rounded text-xs font-semibold transition-all inline-flex items-center gap-1"
                           >
                             <Eye className="w-3.5 h-3.5" /> View
@@ -458,6 +495,12 @@ export default function AdminDashboardPage() {
       <AdminUserManagementModal
         isOpen={isAdminModalOpen}
         onClose={() => setIsAdminModalOpen(false)}
+      />
+
+      {/* ADMIN AUDIT TRAIL MODAL */}
+      <AdminAuditTrailModal
+        isOpen={isAuditModalOpen}
+        onClose={() => setIsAuditModalOpen(false)}
       />
     </main>
   );
