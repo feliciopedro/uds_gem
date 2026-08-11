@@ -2,6 +2,20 @@
  * Helper utility for sending SMS notifications via mNotify v2 API
  * API Key & Sender ID are stored strictly in server environment variables
  */
+export function formatPhoneNumber(recipientPhone: string): string {
+  let digits = recipientPhone.replace(/[^\d]/g, '');
+
+  if (digits.startsWith('00')) {
+    // International prefix 00 (e.g. 00447911123456 -> 447911123456)
+    digits = digits.substring(2);
+  } else if (digits.startsWith('0')) {
+    // Local Ghanaian number (e.g. 0241234567 -> 233241234567)
+    digits = '233' + digits.substring(1);
+  }
+
+  return digits;
+}
+
 export async function sendMNotifySMS({
   recipientPhone,
   message,
@@ -12,11 +26,7 @@ export async function sendMNotifySMS({
   const apiKey = process.env.MNOTIFY_API_KEY || 'Pge6NFHGQzEl3bp6Ca4Apqqc8';
   const senderId = process.env.MNOTIFY_SENDER_ID || 'AgriConnect';
 
-  // Format recipient phone number (strip non-digits and ensure 233 country code)
-  let formattedPhone = recipientPhone.replace(/[^\d]/g, '');
-  if (formattedPhone.startsWith('0')) {
-    formattedPhone = '233' + formattedPhone.substring(1);
-  }
+  const formattedPhone = formatPhoneNumber(recipientPhone);
 
   const endpoint = `https://api.mnotify.com/api/sms/quick?key=${apiKey}`;
 
