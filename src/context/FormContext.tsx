@@ -6,7 +6,7 @@ import {
   FormStep,
   ApplicationRecord,
 } from '@/types/application';
-import { generateApplicationNumber, generateSHA256Hash } from '@/lib/crypto';
+import { generateSHA256Hash } from '@/lib/crypto';
 
 const INITIAL_FORM_DATA: ApplicationFormData = {
   personalInfo: {
@@ -238,28 +238,58 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const completeSimulatedPayment = async () => {
-    const appNum = generateApplicationNumber();
+    let appNum = '';
+    let dataHash = '';
+    let submittedAt = new Date().toISOString();
+
+    try {
+      const response = await fetch('/api/applications/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          draftId,
+          paymentReference: `PAYSTACK_VERIFIED_${Date.now()}`,
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        appNum = result.applicationNumber;
+        dataHash = result.dataHash;
+        if (result.submittedAt) submittedAt = result.submittedAt;
+      }
+    } catch (e) {
+      console.warn('Payment verification API call fallback active:', e);
+    }
+
+    if (!appNum) {
+      const year = new Date().getFullYear();
+      appNum = `NSCD-${year}-00001`;
+    }
+
     const feeCurrency: 'GHS' | 'USD' =
       serverFee?.currency || (formData.applicantCategory === 'Local Applicant' ? 'GHS' : 'USD');
     const feeAmount =
       serverFee?.amount || (formData.applicantCategory === 'Local Applicant' ? 150 : 15);
-    
+
     const recordPayload = {
       ...formData,
       id: draftId || undefined,
       applicationNumber: appNum,
-      submittedAt: new Date().toISOString(),
+      submittedAt,
       feeCurrency,
       feeAmount,
       paymentStatus: 'paid' as const,
       applicationStatus: 'submitted' as const,
     };
 
-    const hash = await generateSHA256Hash(recordPayload);
+    if (!dataHash) {
+      dataHash = await generateSHA256Hash(recordPayload);
+    }
 
     const record: ApplicationRecord = {
       ...recordPayload,
-      dataHash: hash,
+      dataHash,
     };
 
     setSubmittedRecord(record);

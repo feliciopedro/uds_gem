@@ -1,9 +1,26 @@
 -- Schema for National Security Career Development Program (NSCDP) Registration System
 -- Supabase PostgreSQL Table Schema
 
+-- Atomic Sequence for Application Number Generation
+CREATE SEQUENCE IF NOT EXISTS nscd_app_number_seq START WITH 1 INCREMENT BY 1;
+
+-- Stored Function for Server-Side Unique Application Number Generation
+-- Format: NSCD-2026-00001, NSCD-2026-00002, NSCD-2026-00003
+CREATE OR REPLACE FUNCTION generate_next_application_number()
+RETURNS VARCHAR AS $$
+DECLARE
+    next_val BIGINT;
+    year_str VARCHAR(4);
+BEGIN
+    next_val := nextval('nscd_app_number_seq');
+    year_str := TO_CHAR(CURRENT_DATE, 'YYYY');
+    RETURN 'NSCD-' || year_str || '-' || LPAD(next_val::TEXT, 5, '0');
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE TABLE IF NOT EXISTS applications (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    application_number VARCHAR(30) UNIQUE, -- Generated upon final payment/submission
+    application_number VARCHAR(30) UNIQUE, -- Generated ONLY upon payment verification
     
     -- Personal Details
     first_name VARCHAR(100) NOT NULL,
@@ -68,7 +85,7 @@ CREATE INDEX IF NOT EXISTS idx_applications_status ON applications(application_s
 CREATE TABLE IF NOT EXISTS application_audit_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     application_id UUID REFERENCES applications(id) ON DELETE CASCADE,
-    action VARCHAR(100) NOT NULL, -- 'DRAFT_CREATED', 'PAYMENT_SIMULATED', 'APPLICATION_SUBMITTED'
+    action VARCHAR(100) NOT NULL, -- 'DRAFT_CREATED', 'PAYMENT_VERIFIED', 'APPLICATION_SUBMITTED'
     details JSONB NOT NULL,
     timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
     entry_hash VARCHAR(64) NOT NULL
