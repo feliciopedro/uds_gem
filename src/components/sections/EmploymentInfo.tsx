@@ -1,0 +1,154 @@
+'use client';
+
+import React from 'react';
+import { useFormContext } from '@/context/FormContext';
+import { Briefcase } from 'lucide-react';
+
+export const EmploymentInfo: React.FC = () => {
+  const { formData, updateEmploymentInfo } = useFormContext();
+  const { employmentInfo } = formData;
+
+  return (
+    <section className="bg-white p-5 border border-gray-200 rounded-lg shadow-sm">
+      <div className="flex items-center gap-2 border-b border-gray-100 pb-3 mb-4">
+        <div className="p-1.5 bg-slate-100 rounded text-[#0B1D3A]">
+          <Briefcase className="w-5 h-5" />
+        </div>
+        <div>
+          <h2 className="text-sm font-bold tracking-wider text-[#0B1D3A] uppercase">
+            Employment Information
+          </h2>
+          <p className="text-xs text-gray-500">Your professional background and current role</p>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {/* Are you a security officer/professional? */}
+        <div className="bg-slate-50 p-3.5 border border-slate-200 rounded-md">
+          <label className="block text-xs font-bold text-[#0B1D3A] mb-2">
+            Are you a security officer or security professional?
+          </label>
+          <div className="flex items-center gap-6">
+            <label className="inline-flex items-center gap-2 text-sm text-gray-800 font-medium cursor-pointer">
+              <input
+                type="radio"
+                name="isSecurityOfficer"
+                value="Yes"
+                checked={employmentInfo.isSecurityOfficer === 'Yes'}
+                onChange={(e) => updateEmploymentInfo('isSecurityOfficer', e.target.value)}
+                className="w-4 h-4 text-[#0B1D3A] focus:ring-[#0B1D3A]"
+              />
+              Yes
+            </label>
+            <label className="inline-flex items-center gap-2 text-sm text-gray-800 font-medium cursor-pointer">
+              <input
+                type="radio"
+                name="isSecurityOfficer"
+                value="No"
+                checked={employmentInfo.isSecurityOfficer === 'No'}
+                onChange={(e) => updateEmploymentInfo('isSecurityOfficer', e.target.value)}
+                className="w-4 h-4 text-[#0B1D3A] focus:ring-[#0B1D3A]"
+              />
+              No
+            </label>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Security Organization Type */}
+          <div>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">
+              Security Organization Type
+            </label>
+            <select
+              value={employmentInfo.securityOrgType}
+              onChange={(e) => updateEmploymentInfo('securityOrgType', e.target.value)}
+              className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A] bg-white"
+            >
+              <option value="">Select Organization Type</option>
+              <option value="Armed Forces / Military">Armed Forces / Military</option>
+              <option value="Police Service">Police Service</option>
+              <option value="National Intelligence Agency">National Intelligence Agency</option>
+              <option value="Immigration / Customs / Border Security">Immigration / Customs / Border Security</option>
+              <option value="Private Security Company">Private Security Company</option>
+              <option value="Corporate / Industrial Security">Corporate / Industrial Security</option>
+              <option value="Civil Service / Ministry">Civil Service / Ministry</option>
+              <option value="Non-Governmental Organization (NGO)">Non-Governmental Organization (NGO)</option>
+              <option value="Non-Security Sector">Non-Security Sector</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          {/* Name of Current Organization */}
+          <div>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">
+              Name of Current Organization
+            </label>
+            <input
+              type="text"
+              value={employmentInfo.currentOrganization}
+              onChange={(e) => updateEmploymentInfo('currentOrganization', e.target.value)}
+              placeholder="e.g. Ghana Armed Forces / Ministry of National Security"
+              className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A]"
+            />
+          </div>
+
+          {/* Position */}
+          <div>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">
+              Current Position / Rank
+            </label>
+            <input
+              type="text"
+              value={employmentInfo.position}
+              onChange={(e) => updateEmploymentInfo('position', e.target.value)}
+              placeholder="e.g. Intelligence Analyst / Security Officer"
+              className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A]"
+            />
+          </div>
+
+          {/* Employment Date */}
+          <div>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">
+              Employment Start Date
+            </label>
+            <input
+              type="date"
+              value={employmentInfo.employmentDate}
+              onChange={(e) => updateEmploymentInfo('employmentDate', e.target.value)}
+              className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A]"
+            />
+          </div>
+
+          {/* Country */}
+          <div>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">
+              Country of Employment
+            </label>
+            <input
+              type="text"
+              value={employmentInfo.country}
+              onChange={(e) => updateEmploymentInfo('country', e.target.value)}
+              placeholder="e.g. Ghana"
+              className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A]"
+            />
+          </div>
+
+          {/* Address */}
+          <div>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">
+              Organization Address
+            </label>
+            <input
+              type="text"
+              value={employmentInfo.address}
+              onChange={(e) => updateEmploymentInfo('address', e.target.value)}
+              placeholder="P.O. Box or Office location"
+              className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A]"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
