@@ -4,17 +4,28 @@
 -- Atomic Sequence for Application Number Generation
 CREATE SEQUENCE IF NOT EXISTS nscd_app_number_seq START WITH 1 INCREMENT BY 1;
 
--- Stored Function for Server-Side Unique Application Number Generation
--- Format: NSCD-2026-00001, NSCD-2026-00002, NSCD-2026-00003
+-- Stored Function for Server-Side Unique Random Application Number Generation
+-- Format: NSCD-2026-73914, NSCD-2026-48209 (randomized 5-digit numbers)
 CREATE OR REPLACE FUNCTION generate_next_application_number()
 RETURNS VARCHAR AS $$
 DECLARE
-    next_val BIGINT;
+    rand_val INTEGER;
+    candidate VARCHAR(30);
     year_str VARCHAR(4);
+    exists_count INTEGER;
 BEGIN
-    next_val := nextval('nscd_app_number_seq');
     year_str := TO_CHAR(CURRENT_DATE, 'YYYY');
-    RETURN 'NSCD-' || year_str || '-' || LPAD(next_val::TEXT, 5, '0');
+    LOOP
+        -- Generate random 5-digit number between 10000 and 99999
+        rand_val := FLOOR(10000 + RANDOM() * 90000)::INTEGER;
+        candidate := 'NSCD-' || year_str || '-' || rand_val::TEXT;
+        
+        -- Check if candidate already exists in applications table
+        SELECT COUNT(*) INTO exists_count FROM applications WHERE application_number = candidate;
+        IF exists_count = 0 THEN
+            RETURN candidate;
+        END IF;
+    END LOOP;
 END;
 $$ LANGUAGE plpgsql;
 

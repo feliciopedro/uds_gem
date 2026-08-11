@@ -56,9 +56,9 @@ export async function POST(req: NextRequest) {
     }
 
     if (!appNumber) {
-      // Fallback server-side atomic formatted generation: NSCD-YYYY-00001
-      const numStr = String(fallbackCounter++).padStart(5, '0');
-      appNumber = `NSCD-${currentYear}-${numStr}`;
+      // Fallback server-side random application number generation: NSCD-2026-XXXXX
+      const random5Digit = Math.floor(10000 + Math.random() * 90000);
+      appNumber = `NSCD-${currentYear}-${random5Digit}`;
     }
 
     // 4. Update Application Record to 'paid' & 'submitted'
