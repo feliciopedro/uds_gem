@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 export const ReviewStep: React.FC = () => {
-  const { formData, setCurrentStep, proceedToPayment } = useFormContext();
+  const { formData, setCurrentStep, proceedToPayment, serverFee, draftId } = useFormContext();
   const {
     personalInfo,
     educationInfo,
@@ -30,7 +30,11 @@ export const ReviewStep: React.FC = () => {
     modeOfFunding,
   } = formData;
 
-  const feeDisplay = applicantCategory === 'Local Applicant' ? 'GHS 150' : 'USD 15';
+  const feeDisplay = serverFee
+    ? `${serverFee.currency} ${serverFee.amount}`
+    : applicantCategory === 'Local Applicant'
+    ? 'GHS 150'
+    : 'USD 15';
 
   return (
     <div className="space-y-6">
@@ -38,15 +42,20 @@ export const ReviewStep: React.FC = () => {
       <div className="bg-slate-900 text-white p-5 rounded-lg shadow">
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-xs uppercase tracking-widest text-[#C59B27] font-semibold">
-              Step 2 of 4
-            </span>
-            <h2 className="text-lg font-bold">Application Summary & Verification</h2>
+            <div className="flex items-center gap-2">
+              <span className="text-xs uppercase tracking-widest text-[#C59B27] font-semibold">
+                Step 2 of 4
+              </span>
+              <span className="text-[10px] bg-emerald-900/80 text-emerald-300 px-2 py-0.5 rounded border border-emerald-700 font-mono">
+                Status: Draft Saved
+              </span>
+            </div>
+            <h2 className="text-lg font-bold mt-0.5">Application Summary & Verification</h2>
           </div>
           <CheckCircle className="w-8 h-8 text-[#C59B27]" />
         </div>
         <p className="text-xs text-slate-300 mt-1">
-          Please carefully review your registration details below before proceeding to payment.
+          Your draft application has been registered in the database. Please review your details below before proceeding to payment.
         </p>
       </div>
 

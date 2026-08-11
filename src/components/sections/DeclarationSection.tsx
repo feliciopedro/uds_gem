@@ -5,7 +5,7 @@ import { useFormContext } from '@/context/FormContext';
 import { CheckSquare, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export const DeclarationSection: React.FC = () => {
-  const { formData, setFormData, submitApplicationForReview, errors } = useFormContext();
+  const { formData, setFormData, submitApplicationForReview, errors, isSavingDraft } = useFormContext();
   const { declarationAccepted } = formData;
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,11 +58,21 @@ export const DeclarationSection: React.FC = () => {
       <div className="pt-3">
         <button
           type="button"
+          disabled={isSavingDraft}
           onClick={submitApplicationForReview}
-          className="w-full bg-[#0B1D3A] hover:bg-[#102a43] text-white font-bold py-3.5 px-6 rounded-md shadow-md transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider"
+          className="w-full bg-[#0B1D3A] hover:bg-[#102a43] text-white font-bold py-3.5 px-6 rounded-md shadow-md transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider disabled:opacity-50"
         >
-          <span>Continue to Review</span>
-          <ArrowRight className="w-4 h-4" />
+          {isSavingDraft ? (
+            <span className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              Saving Application Draft...
+            </span>
+          ) : (
+            <>
+              <span>Continue to Review</span>
+              <ArrowRight className="w-4 h-4" />
+            </>
+          )}
         </button>
       </div>
     </section>

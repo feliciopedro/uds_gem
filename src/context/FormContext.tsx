@@ -58,11 +58,14 @@ interface FormContextType {
   updateMotivation: (text: string) => void;
   updateProgram: (programType: ApplicationFormData['programType'], specialization?: string) => void;
   submittedRecord: ApplicationRecord | null;
-  submitApplicationForReview: () => boolean;
+  submitApplicationForReview: () => Promise<boolean>;
   proceedToPayment: () => void;
   completeSimulatedPayment: () => Promise<void>;
   resetForm: () => void;
   errors: Record<string, string>;
+  isSavingDraft: boolean;
+  draftId: string | null;
+  serverFee: { amount: number; currency: 'GHS' | 'USD' } | null;
 }
 
 const FormContext = createContext<FormContextType | undefined>(undefined);
@@ -74,6 +77,9 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [currentStep, setCurrentStep] = useState<FormStep>('form');
   const [submittedRecord, setSubmittedRecord] = useState<ApplicationRecord | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSavingDraft, setIsSavingDraft] = useState(false);
+  const [draftId, setDraftId] = useState<string | null>(null);
+  const [serverFee, setServerFee] = useState<{ amount: number; currency: 'GHS' | 'USD' } | null>(null);
 
   // Restore draft from local storage on load
   useEffect(() => {
@@ -84,6 +90,8 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (parsed.formData) setFormData(parsed.formData);
         if (parsed.currentStep) setCurrentStep(parsed.currentStep);
         if (parsed.submittedRecord) setSubmittedRecord(parsed.submittedRecord);
+        if (parsed.draftId) setDraftId(parsed.draftId);
+        if (parsed.serverFee) setServerFee(parsed.serverFee);
       }
     } catch (e) {
       console.error('Failed to load saved application state:', e);
@@ -95,12 +103,12 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       localStorage.setItem(
         LOCAL_STORAGE_KEY,
-        JSON.stringify({ formData, currentStep, submittedRecord })
+        JSON.stringify({ formData, currentStep, submittedRecord, draftId, serverFee })
       );
     } catch (e) {
       console.error('Failed to save application state:', e);
     }
-  }, [formData, currentStep, submittedRecord]);
+  }, [formData, currentStep, submittedRecord, draftId, serverFee]);
 
   const updatePersonalInfo = (field: keyof ApplicationFormData['personalInfo'], value: string) => {
     setFormData((prev) => ({
@@ -190,12 +198,37 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return Object.keys(newErrors).length === 0;
   };
 
-  const submitApplicationForReview = (): boolean => {
+  const submitApplicationForReview = async (): Promise<boolean> => {
     if (!validateForm()) {
       return false;
     }
-    setCurrentStep('review');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    setIsSavingDraft(true);
+    try {
+      const response = await fetch('/api/applications/draft', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          draftId,
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setDraftId(result.draftId);
+        setServerFee({
+          amount: result.application_fee_amount,
+          currency: result.application_fee_currency,
+        });
+      }
+    } catch (e) {
+      console.warn('Failed server draft save call, using local state:', e);
+    } finally {
+      setIsSavingDraft(false);
+      setCurrentStep('review');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
     return true;
   };
 
@@ -206,16 +239,20 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const completeSimulatedPayment = async () => {
     const appNum = generateApplicationNumber();
-    const feeCurrency: 'GHS' | 'USD' = formData.applicantCategory === 'Local Applicant' ? 'GHS' : 'USD';
-    const feeAmount = formData.applicantCategory === 'Local Applicant' ? 150 : 15;
+    const feeCurrency: 'GHS' | 'USD' =
+      serverFee?.currency || (formData.applicantCategory === 'Local Applicant' ? 'GHS' : 'USD');
+    const feeAmount =
+      serverFee?.amount || (formData.applicantCategory === 'Local Applicant' ? 150 : 15);
     
     const recordPayload = {
       ...formData,
+      id: draftId || undefined,
       applicationNumber: appNum,
       submittedAt: new Date().toISOString(),
       feeCurrency,
       feeAmount,
-      paymentStatus: 'SIMULATED_PAID' as const,
+      paymentStatus: 'paid' as const,
+      applicationStatus: 'submitted' as const,
     };
 
     const hash = await generateSHA256Hash(recordPayload);
@@ -234,6 +271,8 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setFormData(INITIAL_FORM_DATA);
     setCurrentStep('form');
     setSubmittedRecord(null);
+    setDraftId(null);
+    setServerFee(null);
     setErrors({});
     localStorage.removeItem(LOCAL_STORAGE_KEY);
   };
@@ -256,6 +295,9 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
         completeSimulatedPayment,
         resetForm,
         errors,
+        isSavingDraft,
+        draftId,
+        serverFee,
       }}
     >
       {children}

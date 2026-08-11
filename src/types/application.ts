@@ -1,18 +1,5 @@
-export type ProgramType = 'Basic Program' | 'Advanced Program';
-
-export type BasicSpecialization =
-  | 'Basic Intelligence'
-  | 'Intelligence Analysis'
-  | 'National Security Fundamentals'
-  | 'Other';
-
-export type AdvancedSpecialization =
-  | 'Intelligence Operations'
-  | 'National Security and Statecraft'
-  | 'Security Risk Management'
-  | 'Other';
-
-export type SpecializationOption = BasicSpecialization | AdvancedSpecialization | string;
+export type ProgramLevel = 'Basic Program' | 'Advanced Program';
+export type ProgramType = ProgramLevel;
 
 export type ApplicantCategory = 'Local Applicant' | 'Foreign Applicant';
 
@@ -53,38 +40,70 @@ export interface EmploymentInfo {
 }
 
 export interface ApplicationFormData {
-  // Section 1: Personal Information
   personalInfo: PersonalInfo;
-  
-  // Section 2: Educational Information
   educationInfo: EducationInfo;
-  
-  // Section 3: Employment Information
   employmentInfo: EmploymentInfo;
-  
-  // Section 4: Motivation
   motivationStatement: string;
-  
-  // Section 5: Program of Study
-  programType: ProgramType | '';
-  specialization: SpecializationOption;
+  programType: ProgramLevel | '';
+  specialization: string;
   customSpecialization?: string;
-  
-  // Section 6: Applicant Category
   applicantCategory: ApplicantCategory;
-  
-  // Section 7: Mode of Funding
   modeOfFunding: ModeOfFunding;
-  
-  // Section 8: Declaration
   declarationAccepted: boolean;
 }
 
+// Supabase Database Row Structure
+export interface SupabaseApplicationRow {
+  id?: string;
+  application_number?: string | null;
+  first_name: string;
+  middle_name?: string | null;
+  surname: string;
+  sex: string;
+  date_of_birth: string;
+  place_of_birth: string;
+  nationality: string;
+  national_id_passport: string;
+  email: string;
+  phone: string;
+
+  highest_education: string;
+  school_attended: string;
+  education_country: string;
+  year_of_entry?: number | null;
+  year_of_completion?: number | null;
+  qualification: string;
+
+  security_professional: string; // 'Yes' | 'No'
+  security_organization_type?: string | null;
+  organization_name?: string | null;
+  organization_country?: string | null;
+  organization_address?: string | null;
+  position?: string | null;
+  employment_date?: string | null;
+
+  motivation: string;
+  program_level: string; // 'Basic Program' | 'Advanced Program'
+  course: string; // Specialization
+  applicant_category: string; // 'Local Applicant' | 'Foreign Applicant'
+  funding_source: string; // 'Self Funded' | 'Employer Sponsored'
+
+  application_fee_amount: number;
+  application_fee_currency: 'GHS' | 'USD';
+  payment_status: 'pending' | 'paid';
+  application_status: 'draft' | 'submitted';
+  data_hash?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface ApplicationRecord extends ApplicationFormData {
-  applicationNumber: string;
+  id?: string;
+  applicationNumber?: string;
   submittedAt: string;
   feeCurrency: 'GHS' | 'USD';
   feeAmount: number;
-  paymentStatus: 'PENDING' | 'SIMULATED_PAID';
+  paymentStatus: 'pending' | 'paid';
+  applicationStatus: 'draft' | 'submitted';
   dataHash: string;
 }
