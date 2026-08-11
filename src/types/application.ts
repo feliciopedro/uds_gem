@@ -92,6 +92,7 @@ export interface SupabaseApplicationRow {
   application_fee_currency: 'GHS' | 'USD';
   payment_status: 'pending' | 'paid';
   application_status: 'draft' | 'submitted';
+  sms_status?: 'pending' | 'sent' | 'failed';
   data_hash?: string;
   created_at?: string;
   updated_at?: string;
@@ -105,5 +106,6 @@ export interface ApplicationRecord extends ApplicationFormData {
   feeAmount: number;
   paymentStatus: 'pending' | 'paid';
   applicationStatus: 'draft' | 'submitted';
+  smsStatus?: 'pending' | 'sent' | 'failed';
   dataHash: string;
 }

@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS applications (
     application_fee_currency VARCHAR(10) NOT NULL, -- 'GHS' | 'USD'
     payment_status VARCHAR(50) NOT NULL DEFAULT 'pending', -- 'pending' | 'paid'
     application_status VARCHAR(50) NOT NULL DEFAULT 'draft', -- 'draft' | 'submitted'
+    sms_status VARCHAR(50) NOT NULL DEFAULT 'pending', -- 'pending' | 'sent' | 'failed'
     
     -- Cryptographic Data Signature Hash
     data_hash VARCHAR(64) NOT NULL,
@@ -76,16 +77,17 @@ CREATE TABLE IF NOT EXISTS applications (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
 );
 
--- Index for fast lookup by email or application_number
+-- Index for fast lookup by email, application_number, or status
 CREATE INDEX IF NOT EXISTS idx_applications_email ON applications(email);
 CREATE INDEX IF NOT EXISTS idx_applications_app_number ON applications(application_number);
 CREATE INDEX IF NOT EXISTS idx_applications_status ON applications(application_status);
+CREATE INDEX IF NOT EXISTS idx_applications_sms_status ON applications(sms_status);
 
 -- Immutable Audit Logs Table
 CREATE TABLE IF NOT EXISTS application_audit_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     application_id UUID REFERENCES applications(id) ON DELETE CASCADE,
-    action VARCHAR(100) NOT NULL, -- 'DRAFT_CREATED', 'PAYMENT_VERIFIED', 'APPLICATION_SUBMITTED'
+    action VARCHAR(100) NOT NULL, -- 'DRAFT_CREATED', 'PAYMENT_VERIFIED', 'SMS_DISPATCHED'
     details JSONB NOT NULL,
     timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
     entry_hash VARCHAR(64) NOT NULL

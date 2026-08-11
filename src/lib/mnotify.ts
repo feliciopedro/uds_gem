@@ -1,5 +1,6 @@
 /**
  * Helper utility for sending SMS notifications via mNotify v2 API
+ * API Key & Sender ID are stored strictly in server environment variables
  */
 export async function sendMNotifySMS({
   recipientPhone,
@@ -9,9 +10,9 @@ export async function sendMNotifySMS({
   message: string;
 }): Promise<{ success: boolean; data?: any; error?: string }> {
   const apiKey = process.env.MNOTIFY_API_KEY || 'Pge6NFHGQzEl3bp6Ca4Apqqc8';
-  const senderId = process.env.MNOTIFY_SENDER_ID || 'NSCDP';
+  const senderId = process.env.MNOTIFY_SENDER_ID || 'UDS/IISS';
 
-  // Format recipient phone number (remove spaces, symbols)
+  // Format recipient phone number (strip spaces, symbols)
   let formattedPhone = recipientPhone.replace(/[^\d+]/g, '');
   if (formattedPhone.startsWith('+')) {
     formattedPhone = formattedPhone.substring(1);
@@ -21,7 +22,7 @@ export async function sendMNotifySMS({
 
   const payload = {
     recipient: [formattedPhone],
-    sender: senderId.substring(0, 11), // mNotify sender ID max length is 11 chars
+    sender: senderId.substring(0, 11), // Sender ID capped at 11 characters
     message: message,
     is_schedule: false,
   };
@@ -51,4 +52,20 @@ export async function sendMNotifySMS({
     console.error('mNotify SMS Network Error:', err);
     return { success: false, error: err.message || 'Network error dispatching mNotify SMS' };
   }
+}
+
+/**
+ * Dispatch official application confirmation SMS with exact required text format
+ */
+export async function sendConfirmationSMS({
+  firstName,
+  phone,
+  applicationNumber,
+}: {
+  firstName: string;
+  phone: string;
+  applicationNumber: string;
+}): Promise<{ success: boolean; error?: string }> {
+  const text = `Dear ${firstName}, your application to the National Security Career Development Program has been received successfully. Application No: ${applicationNumber}. Thank you. - UDS/IISS`;
+  return await sendMNotifySMS({ recipientPhone: phone, message: text });
 }
