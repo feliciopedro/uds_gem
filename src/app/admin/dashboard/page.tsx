@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { SupabaseApplicationRow } from '@/types/application';
 import { ApplicationDetailModal } from '@/components/admin/ApplicationDetailModal';
+import { AdminUserManagementModal } from '@/components/admin/AdminUserManagementModal';
 import {
   Users,
   BookOpen,
@@ -19,6 +20,7 @@ import {
   CheckCircle2,
   Clock,
   Shield,
+  UserPlus,
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
@@ -40,6 +42,7 @@ export default function AdminDashboardPage() {
   const [paymentFilter, setPaymentFilter] = useState('All');
 
   const [selectedApplication, setSelectedApplication] = useState<SupabaseApplicationRow | null>(null);
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
 
   const router = useRouter();
 
@@ -169,6 +172,13 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsAdminModalOpen(true)}
+              className="flex items-center gap-1.5 bg-[#0B1D3A] hover:bg-[#102a43] text-white px-3 py-1.5 rounded-md text-xs font-bold shadow transition-all"
+            >
+              <UserPlus className="w-3.5 h-3.5 text-[#C59B27]" />
+              <span>Manage Admins</span>
+            </button>
             <button
               onClick={fetchData}
               className="p-2 text-gray-600 hover:text-[#0B1D3A] hover:bg-slate-100 rounded-md transition-colors"
@@ -442,6 +452,12 @@ export default function AdminDashboardPage() {
       <ApplicationDetailModal
         application={selectedApplication}
         onClose={() => setSelectedApplication(null)}
+      />
+
+      {/* ADMIN USER MANAGEMENT MODAL */}
+      <AdminUserManagementModal
+        isOpen={isAdminModalOpen}
+        onClose={() => setIsAdminModalOpen(false)}
       />
     </main>
   );

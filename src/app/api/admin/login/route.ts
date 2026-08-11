@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyAdminCredentials } from '@/lib/adminAuth';
 
 export async function POST(req: NextRequest) {
   try {
@@ -7,10 +8,13 @@ export async function POST(req: NextRequest) {
     const validEmail = process.env.ADMIN_EMAIL || 'admin@uds.edu.gh';
     const validPassword = process.env.ADMIN_PASSWORD || 'Admin@NSCDP2026!';
 
-    if (
+    const isDefaultMaster =
       (username?.trim().toLowerCase() === validEmail.toLowerCase() || username?.trim() === 'admin') &&
-      password === validPassword
-    ) {
+      password === validPassword;
+
+    const isRegisteredAdmin = await verifyAdminCredentials(username || '', password || '');
+
+    if (isDefaultMaster || isRegisteredAdmin) {
       const response = NextResponse.json({
         success: true,
         message: 'Admin authenticated successfully',
@@ -29,7 +33,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: 'Invalid admin credentials. Please check your username/email and password.' },
+      { error: 'Invalid admin credentials. Please check your email and password.' },
       { status: 401 }
     );
   } catch (err: any) {

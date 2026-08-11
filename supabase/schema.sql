@@ -18,6 +18,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Applications Table
 CREATE TABLE IF NOT EXISTS applications (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     application_number VARCHAR(30) UNIQUE, -- Generated ONLY upon payment verification
@@ -77,17 +78,28 @@ CREATE TABLE IF NOT EXISTS applications (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
 );
 
--- Index for fast lookup by email, application_number, or status
+-- Admin Users Table
+CREATE TABLE IF NOT EXISTS admin_users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    full_name VARCHAR(150) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL DEFAULT 'Admin', -- 'Super Admin' | 'Admin'
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
+);
+
+-- Index for fast lookup
 CREATE INDEX IF NOT EXISTS idx_applications_email ON applications(email);
 CREATE INDEX IF NOT EXISTS idx_applications_app_number ON applications(application_number);
 CREATE INDEX IF NOT EXISTS idx_applications_status ON applications(application_status);
 CREATE INDEX IF NOT EXISTS idx_applications_sms_status ON applications(sms_status);
+CREATE INDEX IF NOT EXISTS idx_admin_users_email ON admin_users(email);
 
 -- Immutable Audit Logs Table
 CREATE TABLE IF NOT EXISTS application_audit_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     application_id UUID REFERENCES applications(id) ON DELETE CASCADE,
-    action VARCHAR(100) NOT NULL, -- 'DRAFT_CREATED', 'PAYMENT_VERIFIED', 'SMS_DISPATCHED'
+    action VARCHAR(100) NOT NULL, -- 'DRAFT_CREATED', 'PAYMENT_VERIFIED', 'ADMIN_ADDED'
     details JSONB NOT NULL,
     timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
     entry_hash VARCHAR(64) NOT NULL
