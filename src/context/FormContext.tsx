@@ -195,6 +195,20 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
       newErrors.motivationStatement = `Motivation statement must be at least 250 words (currently ${wordCount} words, ${250 - wordCount} more words required)`;
     }
 
+    // Conditional Employment Info validation
+    const { employmentInfo } = formData;
+    if (employmentInfo.isSecurityOfficer === 'Yes') {
+      if (!employmentInfo.securityOrgType) {
+        newErrors.securityOrgType = 'Organization Type is required for security personnel';
+      }
+      if (!employmentInfo.currentOrganization.trim()) {
+        newErrors.currentOrganization = 'Organization Name is required for security personnel';
+      }
+      if (!employmentInfo.position.trim()) {
+        newErrors.position = 'Position / Rank is required for security personnel';
+      }
+    }
+
     if (!declarationAccepted) {
       newErrors.declarationAccepted = 'You must accept the declaration to proceed';
     }
