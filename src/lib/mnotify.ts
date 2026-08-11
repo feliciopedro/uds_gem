@@ -10,12 +10,12 @@ export async function sendMNotifySMS({
   message: string;
 }): Promise<{ success: boolean; data?: any; error?: string }> {
   const apiKey = process.env.MNOTIFY_API_KEY || 'Pge6NFHGQzEl3bp6Ca4Apqqc8';
-  const senderId = process.env.MNOTIFY_SENDER_ID || 'UDS/IISS';
+  const senderId = process.env.MNOTIFY_SENDER_ID || 'AgriConnect';
 
-  // Format recipient phone number (strip spaces, symbols)
-  let formattedPhone = recipientPhone.replace(/[^\d+]/g, '');
-  if (formattedPhone.startsWith('+')) {
-    formattedPhone = formattedPhone.substring(1);
+  // Format recipient phone number (strip non-digits and ensure 233 country code)
+  let formattedPhone = recipientPhone.replace(/[^\d]/g, '');
+  if (formattedPhone.startsWith('0')) {
+    formattedPhone = '233' + formattedPhone.substring(1);
   }
 
   const endpoint = `https://api.mnotify.com/api/sms/quick?key=${apiKey}`;

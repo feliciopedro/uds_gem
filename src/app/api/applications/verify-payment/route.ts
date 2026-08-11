@@ -76,10 +76,9 @@ export async function POST(req: NextRequest) {
     updatedPayload.data_hash = newHash;
 
     // 5. DISPATCH mNOTIFY SMS NOTIFICATION
-    // Criteria: Only send after payment verified, status paid, status submitted, application number generated
     let finalSmsStatus: 'sent' | 'failed' = 'failed';
-    const recipientPhone = draftRecord?.phone || body.phone;
-    const firstName = draftRecord?.first_name || 'Applicant';
+    const recipientPhone = draftRecord?.phone || body.phone || body.recipientPhone;
+    const firstName = draftRecord?.first_name || body.firstName || 'Applicant';
 
     if (recipientPhone && appNumber) {
       try {

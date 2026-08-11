@@ -268,6 +268,8 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify({
           draftId,
           paymentReference: `PAYSTACK_VERIFIED_${Date.now()}`,
+          phone: formData.personalInfo.phone,
+          firstName: formData.personalInfo.firstName,
         }),
       });
 

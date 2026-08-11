@@ -112,8 +112,8 @@ export async function POST(req: NextRequest) {
 
     // 6. DISPATCH mNOTIFY SMS NOTIFICATION
     let finalSmsStatus: 'sent' | 'failed' = 'failed';
-    const recipientPhone = draftRecord?.phone || body.phone;
-    const firstName = draftRecord?.first_name || 'Applicant';
+    const recipientPhone = draftRecord?.phone || body.phone || body.recipientPhone;
+    const firstName = draftRecord?.first_name || body.firstName || 'Applicant';
 
     if (recipientPhone && appNumber) {
       try {

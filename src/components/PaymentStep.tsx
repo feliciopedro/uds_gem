@@ -84,6 +84,8 @@ export const PaymentStep: React.FC = () => {
                 body: JSON.stringify({
                   reference: response.reference || data.reference,
                   draftId,
+                  phone: personalInfo.phone,
+                  firstName: personalInfo.firstName,
                 }),
               });
 
