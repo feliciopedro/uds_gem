@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServerClient } from '@/lib/supabaseClient';
 import { generateSHA256Hash } from '@/lib/crypto';
+import { sendMNotifySMS } from '@/lib/mnotify';
 
 // Server-side fallback counter for environments where Supabase procedure isn't initialized yet
 let fallbackCounter = 1;
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 2. Retrieve existing draft record
-    let draftRecord = null;
+    let draftRecord: any = null;
     if (draftId) {
       const { data } = await supabase
         .from('applications')
@@ -70,7 +71,20 @@ export async function POST(req: NextRequest) {
         .eq('id', draftId);
     }
 
-    // 5. Append Audit Log Entry
+    // 5. Send mNotify SMS Notification to Applicant
+    let smsDispatchResult = { success: false };
+    const recipientPhone = draftRecord?.phone || body.phone;
+    const firstName = draftRecord?.first_name || 'Applicant';
+
+    if (recipientPhone) {
+      const smsMessage = `Dear ${firstName}, your application for the National Security Career Development Program (NSCDP) has been received. Your Application Ref No. is ${appNumber}. Thank you.`;
+      smsDispatchResult = await sendMNotifySMS({
+        recipientPhone,
+        message: smsMessage,
+      });
+    }
+
+    // 6. Append Audit Log Entry
     try {
       const auditPayload = {
         application_id: draftId || null,
@@ -79,6 +93,7 @@ export async function POST(req: NextRequest) {
           application_number: appNumber,
           payment_status: 'paid',
           payment_reference: paymentReference || 'SIMULATED',
+          sms_dispatched: smsDispatchResult.success,
         },
         timestamp: new Date().toISOString(),
         entry_hash: newHash,
@@ -95,6 +110,7 @@ export async function POST(req: NextRequest) {
       application_status: 'submitted',
       dataHash: newHash,
       submittedAt: new Date().toISOString(),
+      smsDispatched: smsDispatchResult.success,
       record: updatedPayload,
     });
   } catch (err: any) {
