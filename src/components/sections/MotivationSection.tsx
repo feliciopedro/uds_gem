@@ -13,8 +13,8 @@ export const MotivationSection: React.FC = () => {
     .split(/\s+/)
     .filter((w) => w.length > 0);
   const wordCount = motivationStatement.trim() === '' ? 0 : words.length;
-  const maxWords = 100;
-  const isOverLimit = wordCount > maxWords;
+  const minWords = 250;
+  const isUnderLimit = wordCount < minWords;
 
   return (
     <section className="bg-white p-5 border border-gray-200 rounded-lg shadow-sm">
@@ -24,25 +24,25 @@ export const MotivationSection: React.FC = () => {
         </div>
         <div>
           <h2 className="text-sm font-bold tracking-wider text-[#0B1D3A] uppercase">
-            Motivation
+            Motivation Statement <span className="text-red-500 font-normal text-xs">*</span>
           </h2>
-          <p className="text-xs text-gray-500">Statement of purpose for joining the program</p>
+          <p className="text-xs text-gray-500">Statement of purpose for joining the program (Required - Minimum 250 words)</p>
         </div>
       </div>
 
       <div>
         <label className="block text-xs font-semibold text-gray-700 mb-1">
-          Why do you want to study security and intelligence?
+          Why do you want to study security and intelligence? <span className="text-red-500">*</span>
         </label>
         
         <textarea
-          rows={4}
+          rows={7}
           value={motivationStatement}
           onChange={(e) => updateMotivation(e.target.value)}
-          placeholder="Briefly state your professional aspiration and why you wish to undertake this program..."
+          placeholder="State your professional background, career aspirations, and detailed motivation for joining the National Security Career Development Program (minimum 250 words required)..."
           className={`w-full text-sm p-3 border rounded-md focus:outline-none focus:ring-1 resize-y ${
-            isOverLimit || errors.motivationStatement
-              ? 'border-red-500 focus:ring-red-500'
+            errors.motivationStatement || isUnderLimit
+              ? 'border-amber-400 focus:ring-amber-500'
               : 'border-gray-300 focus:border-[#0B1D3A] focus:ring-[#0B1D3A]'
           }`}
         />
@@ -50,27 +50,25 @@ export const MotivationSection: React.FC = () => {
         {/* Live Word Counter */}
         <div className="flex items-center justify-between mt-1 text-xs">
           <span className="text-gray-500">
-            Maximum {maxWords} words allowed
+            Minimum <strong className="text-gray-800">{minWords} words</strong> required
           </span>
           <div className="flex items-center gap-1.5 font-medium">
-            {isOverLimit && <AlertTriangle className="w-3.5 h-3.5 text-red-500" />}
+            {isUnderLimit && <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />}
             <span
               className={
-                isOverLimit
-                  ? 'text-red-600 font-bold'
-                  : wordCount > 85
-                  ? 'text-amber-600 font-semibold'
-                  : 'text-gray-700'
+                isUnderLimit
+                  ? 'text-amber-700 font-bold'
+                  : 'text-emerald-700 font-bold'
               }
             >
-              Word count: {wordCount} / {maxWords}
+              Word count: {wordCount} / {minWords} min
             </span>
           </div>
         </div>
 
-        {(errors.motivationStatement || isOverLimit) && (
+        {errors.motivationStatement && (
           <p className="text-[11px] text-red-500 mt-1 font-medium">
-            {errors.motivationStatement || `Please reduce your statement by ${wordCount - maxWords} word(s).`}
+            {errors.motivationStatement}
           </p>
         )}
       </div>

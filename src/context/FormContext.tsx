@@ -181,13 +181,18 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     if (!personalInfo.phone.trim()) newErrors.phone = 'Phone Number is required';
 
-    // Motivation word limit check
-    const wordCount = motivationStatement
-      .trim()
-      .split(/\s+/)
-      .filter((w) => w.length > 0).length;
-    if (wordCount > 100) {
-      newErrors.motivationStatement = 'Motivation statement must not exceed 100 words';
+    // Motivation statement minimum 250 words check
+    const wordCount = motivationStatement.trim() === ''
+      ? 0
+      : motivationStatement
+          .trim()
+          .split(/\s+/)
+          .filter((w) => w.length > 0).length;
+
+    if (!motivationStatement.trim()) {
+      newErrors.motivationStatement = 'Motivation statement is required';
+    } else if (wordCount < 250) {
+      newErrors.motivationStatement = `Motivation statement must be at least 250 words (currently ${wordCount} words, ${250 - wordCount} more words required)`;
     }
 
     if (!declarationAccepted) {

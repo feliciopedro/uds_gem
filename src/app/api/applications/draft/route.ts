@@ -27,6 +27,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Motivation Statement Minimum 250 Words Check
+    const motivationWords = (motivationStatement || '')
+      .trim()
+      .split(/\s+/)
+      .filter((w: string) => w.length > 0).length;
+
+    if (!motivationStatement?.trim() || motivationWords < 250) {
+      return NextResponse.json(
+        { error: `Motivation statement is required and must be at least 250 words (currently ${motivationWords} words).` },
+        { status: 400 }
+      );
+    }
+
     // 2. SERVER-SIDE FEE DETERMINATION (DO NOT TRUST BROWSER FEE VALUES)
     const isLocal = applicantCategory === 'Local Applicant';
     const serverFeeAmount = isLocal ? 150.0 : 15.0;
