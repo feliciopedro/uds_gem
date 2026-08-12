@@ -15,17 +15,19 @@ export const PersonalInfo: React.FC = () => {
     const matched = COUNTRY_CODES.find((item) => raw.startsWith(item.code));
     if (matched) {
       return {
+        selectedCountry: matched,
         countryCode: matched.code,
         localPhone: raw.substring(matched.code.length).trim(),
       };
     }
     return {
+      selectedCountry: COUNTRY_CODES[0], // Ghana default
       countryCode: '+233',
       localPhone: raw.startsWith('+') ? '' : raw,
     };
   };
 
-  const { countryCode, localPhone } = getParsedPhone();
+  const { selectedCountry, countryCode, localPhone } = getParsedPhone();
 
   const handleCountryCodeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newCode = e.target.value;
@@ -227,24 +229,34 @@ export const PersonalInfo: React.FC = () => {
           {errors.email && <p className="text-[11px] text-red-500 mt-1">{errors.email}</p>}
         </div>
 
-        {/* Phone Number with Country Code Dropdown */}
+        {/* Phone Number with Country Code Dropdown & Flag Image */}
         <div className="md:col-span-3">
           <label className="block text-xs font-semibold text-gray-700 mb-1">
             Phone Number <span className="text-red-500">*</span>
           </label>
-          <div className="flex gap-2">
-            {/* Country Dial Code Dropdown */}
-            <select
-              value={countryCode}
-              onChange={handleCountryCodeChange}
-              className="text-sm px-2.5 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A] bg-slate-50 font-medium text-gray-800 cursor-pointer min-w-[140px]"
-            >
-              {COUNTRY_CODES.map((item) => (
-                <option key={`${item.iso}-${item.code}`} value={item.code}>
-                  {item.flag} {item.code} ({item.name})
-                </option>
-              ))}
-            </select>
+          <div className="flex gap-2 items-center">
+            {/* Country Selector with Flag Image Preview */}
+            <div className="flex items-center bg-slate-50 border border-gray-300 rounded-md px-2.5 py-1.5 focus-within:ring-1 focus-within:ring-[#0B1D3A] focus-within:border-[#0B1D3A]">
+              <img
+                src={`https://flagcdn.com/w40/${selectedCountry.iso}.png`}
+                alt={selectedCountry.name}
+                className="w-5 h-3.5 object-cover rounded-xs mr-1.5 border border-gray-200"
+                onError={(e) => {
+                  (e.currentTarget as HTMLElement).style.display = 'none';
+                }}
+              />
+              <select
+                value={countryCode}
+                onChange={handleCountryCodeChange}
+                className="text-sm bg-transparent font-semibold text-gray-800 focus:outline-none cursor-pointer pr-1"
+              >
+                {COUNTRY_CODES.map((item) => (
+                  <option key={`${item.iso}-${item.code}-${item.name}`} value={item.code}>
+                    {item.flag} {item.code} ({item.name})
+                  </option>
+                ))}
+              </select>
+            </div>
 
             {/* Local Phone Number Input */}
             <input
