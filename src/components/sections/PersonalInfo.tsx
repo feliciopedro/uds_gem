@@ -252,7 +252,7 @@ export const PersonalInfo: React.FC = () => {
               >
                 {COUNTRY_CODES.map((item) => (
                   <option key={`${item.iso}-${item.code}-${item.name}`} value={item.code}>
-                    {item.flag} {item.code} ({item.name})
+                    {item.flag} {item.code}
                   </option>
                 ))}
               </select>
