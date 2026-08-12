@@ -32,7 +32,7 @@ export default function Home() {
 
         {/* Institutional Footer */}
         <footer className="bg-white border-t border-gray-200 p-4 text-center text-xs text-gray-500">
-          <p>© {new Date().getFullYear()} University for Development Studies (UDS) & Institute for Interdisciplinary & Security Studies (IISS). All rights reserved.</p>
+          <p>© {new Date().getFullYear()} University for Development Studies (UDS) & Institute for Intelligence and Strategic Security (IISS). All rights reserved.</p>
           <p className="mt-1 text-[11px] text-gray-400">National Security Career Development Program • Secure Online Portal</p>
         </footer>
       </div>
