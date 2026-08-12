@@ -3,10 +3,39 @@
 import React from 'react';
 import { useFormContext } from '@/context/FormContext';
 import { User } from 'lucide-react';
+import { COUNTRY_CODES, NATIONALITIES } from '@/data/countries';
 
 export const PersonalInfo: React.FC = () => {
   const { formData, updatePersonalInfo, errors } = useFormContext();
   const { personalInfo } = formData;
+
+  // Extract country dial code and local phone number from personalInfo.phone
+  const getParsedPhone = () => {
+    const raw = personalInfo.phone || '';
+    const matched = COUNTRY_CODES.find((item) => raw.startsWith(item.code));
+    if (matched) {
+      return {
+        countryCode: matched.code,
+        localPhone: raw.substring(matched.code.length).trim(),
+      };
+    }
+    return {
+      countryCode: '+233',
+      localPhone: raw.startsWith('+') ? '' : raw,
+    };
+  };
+
+  const { countryCode, localPhone } = getParsedPhone();
+
+  const handleCountryCodeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newCode = e.target.value;
+    updatePersonalInfo('phone', `${newCode} ${localPhone}`.trim());
+  };
+
+  const handleLocalPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newLocal = e.target.value;
+    updatePersonalInfo('phone', `${countryCode} ${newLocal}`.trim());
+  };
 
   return (
     <section className="bg-white p-5 border border-gray-200 rounded-lg shadow-sm">
@@ -134,22 +163,27 @@ export const PersonalInfo: React.FC = () => {
           {errors.placeOfBirth && <p className="text-[11px] text-red-500 mt-1">{errors.placeOfBirth}</p>}
         </div>
 
-        {/* Nationality */}
+        {/* Nationality Dropdown */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
             Nationality <span className="text-red-500">*</span>
           </label>
-          <input
-            type="text"
-            value={personalInfo.nationality}
+          <select
+            value={personalInfo.nationality || 'Ghanaian'}
             onChange={(e) => updatePersonalInfo('nationality', e.target.value)}
-            placeholder="e.g. Ghanaian"
-            className={`w-full text-sm px-3 py-2 border rounded-md focus:outline-none focus:ring-1 ${
+            className={`w-full text-sm px-3 py-2 border rounded-md focus:outline-none focus:ring-1 bg-white ${
               errors.nationality
                 ? 'border-red-500 focus:ring-red-500'
                 : 'border-gray-300 focus:border-[#0B1D3A] focus:ring-[#0B1D3A]'
             }`}
-          />
+          >
+            <option value="">Select Nationality</option>
+            {NATIONALITIES.map((nat) => (
+              <option key={nat} value={nat}>
+                {nat}
+              </option>
+            ))}
+          </select>
           {errors.nationality && <p className="text-[11px] text-red-500 mt-1">{errors.nationality}</p>}
         </div>
 
@@ -193,22 +227,38 @@ export const PersonalInfo: React.FC = () => {
           {errors.email && <p className="text-[11px] text-red-500 mt-1">{errors.email}</p>}
         </div>
 
-        {/* Phone Number */}
+        {/* Phone Number with Country Code Dropdown */}
         <div className="md:col-span-3">
           <label className="block text-xs font-semibold text-gray-700 mb-1">
             Phone Number <span className="text-red-500">*</span>
           </label>
-          <input
-            type="tel"
-            value={personalInfo.phone}
-            onChange={(e) => updatePersonalInfo('phone', e.target.value)}
-            placeholder="e.g. +233 24 000 0000"
-            className={`w-full text-sm px-3 py-2 border rounded-md focus:outline-none focus:ring-1 ${
-              errors.phone
-                ? 'border-red-500 focus:ring-red-500'
-                : 'border-gray-300 focus:border-[#0B1D3A] focus:ring-[#0B1D3A]'
-            }`}
-          />
+          <div className="flex gap-2">
+            {/* Country Dial Code Dropdown */}
+            <select
+              value={countryCode}
+              onChange={handleCountryCodeChange}
+              className="text-sm px-2.5 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A] bg-slate-50 font-medium text-gray-800 cursor-pointer min-w-[140px]"
+            >
+              {COUNTRY_CODES.map((item) => (
+                <option key={`${item.iso}-${item.code}`} value={item.code}>
+                  {item.flag} {item.code} ({item.name})
+                </option>
+              ))}
+            </select>
+
+            {/* Local Phone Number Input */}
+            <input
+              type="tel"
+              value={localPhone}
+              onChange={handleLocalPhoneChange}
+              placeholder="e.g. 24 000 0000"
+              className={`flex-1 text-sm px-3 py-2 border rounded-md focus:outline-none focus:ring-1 ${
+                errors.phone
+                  ? 'border-red-500 focus:ring-red-500'
+                  : 'border-gray-300 focus:border-[#0B1D3A] focus:ring-[#0B1D3A]'
+              }`}
+            />
+          </div>
           {errors.phone && <p className="text-[11px] text-red-500 mt-1">{errors.phone}</p>}
         </div>
       </div>

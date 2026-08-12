@@ -3,6 +3,7 @@
 import React from 'react';
 import { useFormContext } from '@/context/FormContext';
 import { Briefcase } from 'lucide-react';
+import { WORLD_COUNTRIES } from '@/data/countries';
 
 export const EmploymentInfo: React.FC = () => {
   const { formData, updateEmploymentInfo, errors } = useFormContext();
@@ -147,13 +148,18 @@ export const EmploymentInfo: React.FC = () => {
             <label className="block text-xs font-semibold text-gray-700 mb-1">
               Country of Employment
             </label>
-            <input
-              type="text"
-              value={employmentInfo.country}
+            <select
+              value={employmentInfo.country || 'Ghana'}
               onChange={(e) => updateEmploymentInfo('country', e.target.value)}
-              placeholder="e.g. Ghana"
-              className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A]"
-            />
+              className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A] bg-white text-gray-800"
+            >
+              <option value="">Select Country</option>
+              {WORLD_COUNTRIES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Address */}
