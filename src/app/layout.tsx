@@ -12,7 +12,7 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: 'National Security Career Development Program | Registration Portal',
-  description: 'Official Online Registration Portal for the National Security Career Development Program (UDS & IISS Ghana).',
+  description: 'Official Online Registration Portal for the National Security Career Development Program (UDS & Institute for Intelligence and Strategic Security).',
 };
 
 export default function RootLayout({

@@ -36,10 +36,10 @@ export const Header: React.FC = () => {
           />
           <div className="text-left leading-tight">
             <span className="block text-[11px] font-bold tracking-wider text-[#0B1D3A]">
-              IISS GHANA
+              INSTITUTE FOR INTELLIGENCE
             </span>
             <span className="block text-[10px] text-gray-500 font-medium">
-              INTELLIGENCE & STRATEGIC SECURITY
+              & STRATEGIC SECURITY
             </span>
           </div>
         </div>
