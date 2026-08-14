@@ -3,7 +3,18 @@ import { Shield, BookOpen } from 'lucide-react';
 
 export const Header: React.FC = () => {
   return (
-    <header className="bg-white border-b border-gray-200 pt-6 pb-6 px-4 text-center">
+    <header className="bg-white border-b border-gray-200 pt-6 pb-6 px-4 text-center relative overflow-hidden">
+      {/* Top Corner Ghana Flag Ribbon Accents */}
+      <img
+        src="/ghana-flag-ribbon.png"
+        alt="Ghana Ribbon Accent Left"
+        className="absolute -top-4 -left-6 w-24 sm:w-36 opacity-85 pointer-events-none select-none transform -rotate-12"
+      />
+      <img
+        src="/ghana-flag-ribbon.png"
+        alt="Ghana Ribbon Accent Right"
+        className="absolute -top-4 -right-6 w-24 sm:w-36 opacity-85 pointer-events-none select-none transform scale-x-[-1] rotate-12"
+      />
       {/* Logos Area */}
       <div className="flex items-center justify-center gap-6 mb-4">
         {/* UDS Logo Badge */}
