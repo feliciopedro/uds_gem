@@ -31,7 +31,7 @@ const INITIAL_FORM_DATA: ApplicationFormData = {
     qualificationAwarded: '',
   },
   employmentInfo: {
-    employmentStatus: 'Employed',
+    employmentStatus: 'Yes',
     isSecurityOfficer: 'No',
     securityOrgType: '',
     currentOrganization: '',

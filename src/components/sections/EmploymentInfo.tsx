@@ -25,23 +25,35 @@ export const EmploymentInfo: React.FC = () => {
       </div>
 
       <div className="space-y-4">
-        {/* Current Employment Status (On Top) */}
+        {/* Are you currently employed? (Yes / No Radio) */}
         <div className="bg-slate-50 p-3.5 border border-slate-200 rounded-md">
           <label className="block text-xs font-bold text-[#0B1D3A] mb-2">
-            Current Employment Status / <span className="text-gray-600 font-medium">Statut d'emploi actuel</span> <span className="text-red-500">*</span>
+            Are you currently employed? / <span className="text-gray-600 font-medium">Êtes-vous actuellement employé(e) ?</span> <span className="text-red-500">*</span>
           </label>
-          <select
-            value={employmentInfo.employmentStatus || 'Employed'}
-            onChange={(e) => updateEmploymentInfo('employmentStatus', e.target.value)}
-            className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A] bg-white text-gray-800 font-medium"
-          >
-            <option value="Employed">Employed / Employé(e)</option>
-            <option value="Self-Employed">Self-Employed / Indépendant(e)</option>
-            <option value="Civil / Public Servant">Civil / Public Servant / Fonctionnaire</option>
-            <option value="Unemployed">Unemployed / Sans emploi</option>
-            <option value="Student">Student / Étudiant(e)</option>
-            <option value="Retired">Retired / Retraité(e)</option>
-          </select>
+          <div className="flex items-center gap-6">
+            <label className="inline-flex items-center gap-2 text-sm text-gray-800 font-medium cursor-pointer">
+              <input
+                type="radio"
+                name="isEmployed"
+                value="Yes"
+                checked={employmentInfo.employmentStatus === 'Yes' || employmentInfo.employmentStatus === 'Employed' || !employmentInfo.employmentStatus}
+                onChange={() => updateEmploymentInfo('employmentStatus', 'Yes')}
+                className="w-4 h-4 text-[#0B1D3A] focus:ring-[#0B1D3A]"
+              />
+              Yes / Oui
+            </label>
+            <label className="inline-flex items-center gap-2 text-sm text-gray-800 font-medium cursor-pointer">
+              <input
+                type="radio"
+                name="isEmployed"
+                value="No"
+                checked={employmentInfo.employmentStatus === 'No'}
+                onChange={() => updateEmploymentInfo('employmentStatus', 'No')}
+                className="w-4 h-4 text-[#0B1D3A] focus:ring-[#0B1D3A]"
+              />
+              No / Non
+            </label>
+          </div>
         </div>
 
         {/* Are you a security officer/professional? */}
