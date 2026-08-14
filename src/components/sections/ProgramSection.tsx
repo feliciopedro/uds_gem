@@ -45,9 +45,9 @@ export const ProgramSection: React.FC = () => {
         </div>
         <div>
           <h2 className="text-sm font-bold tracking-wider text-[#0B1D3A] uppercase">
-            Program of Study
+            Program of Study / <span className="text-gray-500 font-medium normal-case">Programme d'Études</span>
           </h2>
-          <p className="text-xs text-gray-500">Select your academic track and specialization</p>
+          <p className="text-xs text-gray-500">Select your academic track and specialization / <span className="italic">Sélectionnez votre filière et spécialisation</span></p>
         </div>
       </div>
 
@@ -55,7 +55,7 @@ export const ProgramSection: React.FC = () => {
         {/* Main Program Option Selector */}
         <div>
           <label className="block text-xs font-bold text-[#0B1D3A] mb-2">
-            Which program are you applying for? <span className="text-red-500">*</span>
+            Which program are you applying for? / <span className="text-gray-600 font-medium">Pour quel programme postulez-vous ?</span> <span className="text-red-500">*</span>
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {/* Basic Program Card */}
@@ -80,9 +80,9 @@ export const ProgramSection: React.FC = () => {
                 )}
               </div>
               <div>
-                <span className="block text-sm font-bold text-[#0B1D3A]">Basic Program</span>
+                <span className="block text-sm font-bold text-[#0B1D3A]">Basic Program / <span className="font-normal text-gray-600">Programme de Base</span></span>
                 <span className="block text-xs text-gray-500 mt-0.5">
-                  Foundational security principles & core intelligence analysis
+                  Foundational security principles & core intelligence analysis / <span className="italic">Principes de sécurité & analyse du renseignement</span>
                 </span>
               </div>
             </button>
@@ -109,9 +109,9 @@ export const ProgramSection: React.FC = () => {
                 )}
               </div>
               <div>
-                <span className="block text-sm font-bold text-[#0B1D3A]">Advanced Program</span>
+                <span className="block text-sm font-bold text-[#0B1D3A]">Advanced Program / <span className="font-normal text-gray-600">Programme Avancé</span></span>
                 <span className="block text-xs text-gray-500 mt-0.5">
-                  Strategic intelligence operations, risk management & statecraft
+                  Strategic intelligence operations & risk management / <span className="italic">Opérations stratégiques & gestion des risques</span>
                 </span>
               </div>
             </button>
@@ -121,7 +121,7 @@ export const ProgramSection: React.FC = () => {
         {/* Dynamic Specializations Sub-options */}
         <div className="bg-slate-50 p-4 border border-slate-200 rounded-md">
           <label className="block text-xs font-bold text-[#0B1D3A] mb-2">
-            Select Specialization Area for {programType} <span className="text-red-500">*</span>
+            Select Specialization Area / <span className="text-gray-600 font-medium">Sélectionnez la spécialisation</span> <span className="text-red-500">*</span>
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {currentOptions.map((opt) => {
@@ -153,7 +153,7 @@ export const ProgramSection: React.FC = () => {
           {specialization === 'Other' && (
             <div className="mt-3">
               <label className="block text-xs font-medium text-gray-700 mb-1">
-                Please specify your requested specialization area:
+                Please specify your requested specialization area / <span className="text-gray-500">Précisez votre domaine de spécialisation</span>:
               </label>
               <input
                 type="text"
@@ -164,7 +164,7 @@ export const ProgramSection: React.FC = () => {
                     customSpecialization: e.target.value,
                   }))
                 }
-                placeholder="e.g. Cybersecurity & Maritime Intelligence"
+                placeholder="e.g. Cybersecurity & Maritime Intelligence / Cybersécurité"
                 className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A]"
               />
             </div>

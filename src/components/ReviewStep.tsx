@@ -285,17 +285,17 @@ export const ReviewStep: React.FC = () => {
           onClick={() => setCurrentStep('form')}
           className="w-full sm:w-1/3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 px-4 rounded-md transition-all flex items-center justify-center gap-2 text-xs uppercase"
         >
-          <ArrowLeft className="w-4 h-4" /> Back to Form
+          <ArrowLeft className="w-4 h-4" /> Back to Form / Retour
         </button>
 
-        {/* PROCEED TO PAYMENT PLACEHOLDER BUTTON */}
+        {/* PROCEED TO PAYMENT BUTTON */}
         <button
           type="button"
           onClick={proceedToPayment}
           className="w-full sm:w-2/3 bg-[#0B1D3A] hover:bg-[#102a43] text-white font-bold py-3.5 px-6 rounded-md shadow-lg transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider"
         >
           <CreditCard className="w-5 h-5 text-[#C59B27]" />
-          <span>Proceed to Payment</span>
+          <span>Proceed to Payment / Procéder au paiement</span>
         </button>
       </div>
     </div>

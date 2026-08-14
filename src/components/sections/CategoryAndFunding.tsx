@@ -33,9 +33,9 @@ export const CategoryAndFunding: React.FC = () => {
           </div>
           <div>
             <h2 className="text-sm font-bold tracking-wider text-[#0B1D3A] uppercase">
-              Applicant Category
+              Applicant Category / <span className="text-gray-500 font-medium normal-case">Catégorie de Candidat</span>
             </h2>
-            <p className="text-xs text-gray-500">Residency status for application fee assessment</p>
+            <p className="text-xs text-gray-500">Residency status for application fee assessment / <span className="italic">Statut pour l'évaluation des frais</span></p>
           </div>
         </div>
 
@@ -58,10 +58,10 @@ export const CategoryAndFunding: React.FC = () => {
                 onChange={() => handleCategoryChange('Local Applicant')}
                 className="w-4 h-4 text-[#0B1D3A] focus:ring-[#0B1D3A]"
               />
-              <span className="text-sm font-bold text-[#0B1D3A]">Local Applicant</span>
+              <span className="text-sm font-bold text-[#0B1D3A]">Local Applicant / <span className="font-normal text-gray-600">Candidat Local</span></span>
             </div>
             <div className="mt-3 pt-2 border-t border-gray-200/60 flex items-center justify-between">
-              <span className="text-xs text-gray-500 font-medium">Application Fee:</span>
+              <span className="text-xs text-gray-500 font-medium">Application Fee / Frais:</span>
               <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                 GHS 150
               </span>
@@ -86,10 +86,10 @@ export const CategoryAndFunding: React.FC = () => {
                 onChange={() => handleCategoryChange('International Applicant')}
                 className="w-4 h-4 text-[#0B1D3A] focus:ring-[#0B1D3A]"
               />
-              <span className="text-sm font-bold text-[#0B1D3A]">International Applicant</span>
+              <span className="text-sm font-bold text-[#0B1D3A]">International Applicant / <span className="font-normal text-gray-600">Candidat International</span></span>
             </div>
             <div className="mt-3 pt-2 border-t border-gray-200/60 flex items-center justify-between">
-              <span className="text-xs text-gray-500 font-medium">Application Fee:</span>
+              <span className="text-xs text-gray-500 font-medium">Application Fee / Frais:</span>
               <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                 USD 15
               </span>
@@ -105,7 +105,7 @@ export const CategoryAndFunding: React.FC = () => {
             <Wallet className="w-4 h-4" />
           </div>
           <h3 className="text-xs font-bold text-[#0B1D3A] uppercase tracking-wider">
-            Mode of Funding
+            Mode of Funding / <span className="text-gray-500 font-medium normal-case">Mode de Financement</span>
           </h3>
         </div>
 
@@ -125,7 +125,7 @@ export const CategoryAndFunding: React.FC = () => {
               onChange={() => handleFundingChange('Self Funded')}
               className="w-4 h-4 text-[#0B1D3A] focus:ring-[#0B1D3A]"
             />
-            Self Funded
+            Self Funded / Auto-financé
           </label>
 
           <label
@@ -143,7 +143,7 @@ export const CategoryAndFunding: React.FC = () => {
               onChange={() => handleFundingChange('Employer Sponsored')}
               className="w-4 h-4 text-[#0B1D3A] focus:ring-[#0B1D3A]"
             />
-            Employer Sponsored
+            Employer Sponsored / Parrainé par l'employeur
           </label>
         </div>
       </div>

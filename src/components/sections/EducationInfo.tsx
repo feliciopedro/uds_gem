@@ -17,9 +17,9 @@ export const EducationInfo: React.FC = () => {
         </div>
         <div>
           <h2 className="text-sm font-bold tracking-wider text-[#0B1D3A] uppercase">
-            Educational Information
+            Educational Information / <span className="text-gray-500 font-medium normal-case">Informations Académiques</span>
           </h2>
-          <p className="text-xs text-gray-500">Details of your academic qualifications</p>
+          <p className="text-xs text-gray-500">Details of your academic qualifications / <span className="italic">Détails de vos qualifications académiques</span></p>
         </div>
       </div>
 
@@ -27,33 +27,33 @@ export const EducationInfo: React.FC = () => {
         {/* Highest Education Level */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            Highest Education Level
+            Highest Education Level / <span className="text-gray-500 font-normal">Niveau d'études le plus élevé</span>
           </label>
           <select
             value={educationInfo.highestEducationLevel}
             onChange={(e) => updateEducationInfo('highestEducationLevel', e.target.value)}
             className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A] bg-white"
           >
-            <option value="Senior High School / WASSCE">Senior High School / WASSCE</option>
-            <option value="Diploma / HND">Diploma / HND</option>
-            <option value="Bachelor's Degree">Bachelor's Degree</option>
-            <option value="Master's Degree">Master's Degree</option>
-            <option value="Doctorate (Ph.D.)">Doctorate (Ph.D.)</option>
-            <option value="Professional Certification">Professional Certification</option>
-            <option value="Other">Other</option>
+            <option value="Senior High School / WASSCE">Senior High School / WASSCE / Diplôme d'études secondaires</option>
+            <option value="Diploma / HND">Diploma / HND / Diplôme / HND</option>
+            <option value="Bachelor's Degree">Bachelor's Degree / Licence</option>
+            <option value="Master's Degree">Master's Degree / Master</option>
+            <option value="Doctorate (Ph.D.)">Doctorate (Ph.D.) / Doctorat</option>
+            <option value="Professional Certification">Professional Certification / Certification professionnelle</option>
+            <option value="Other">Other / Autre</option>
           </select>
         </div>
 
         {/* School Attended */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            School / Institution Attended
+            School / Institution Attended / <span className="text-gray-500 font-normal">Établissement fréquenté</span>
           </label>
           <input
             type="text"
             value={educationInfo.schoolAttended}
             onChange={(e) => updateEducationInfo('schoolAttended', e.target.value)}
-            placeholder="e.g. University for Development Studies"
+            placeholder="e.g. University for Development Studies / Université"
             className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A]"
           />
         </div>
@@ -61,14 +61,14 @@ export const EducationInfo: React.FC = () => {
         {/* Country */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            Country of Institution
+            Country of Institution / <span className="text-gray-500 font-normal">Pays de l'établissement</span>
           </label>
           <select
             value={educationInfo.country || 'Ghana'}
             onChange={(e) => updateEducationInfo('country', e.target.value)}
             className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A] bg-white text-gray-800"
           >
-            <option value="">Select Country</option>
+            <option value="">Select Country / Sélectionner le pays</option>
             {WORLD_COUNTRIES.map((c) => (
               <option key={c} value={c}>
                 {c}
@@ -80,13 +80,13 @@ export const EducationInfo: React.FC = () => {
         {/* Qualification Awarded */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            Degree / Diploma / Certificate Awarded
+            Degree / Diploma / Certificate Awarded / <span className="text-gray-500 font-normal">Diplôme ou certificat obtenu</span>
           </label>
           <input
             type="text"
             value={educationInfo.qualificationAwarded}
             onChange={(e) => updateEducationInfo('qualificationAwarded', e.target.value)}
-            placeholder="e.g. B.A. Political Science & Security Studies"
+            placeholder="e.g. B.A. Political Science & Security Studies / Licence"
             className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A]"
           />
         </div>
@@ -94,7 +94,7 @@ export const EducationInfo: React.FC = () => {
         {/* Year of Entry */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            Year of Entry
+            Year of Entry / <span className="text-gray-500 font-normal">Année d'entrée</span>
           </label>
           <input
             type="number"
@@ -110,7 +110,7 @@ export const EducationInfo: React.FC = () => {
         {/* Year of Completion */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            Year of Completion
+            Year of Completion / <span className="text-gray-500 font-normal">Année de fin d'études</span>
           </label>
           <input
             type="number"

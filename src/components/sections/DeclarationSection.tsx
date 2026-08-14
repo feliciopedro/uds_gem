@@ -23,9 +23,9 @@ export const DeclarationSection: React.FC = () => {
         </div>
         <div>
           <h2 className="text-sm font-bold tracking-wider text-[#0B1D3A] uppercase">
-            Declaration
+            Declaration / <span className="text-gray-500 font-medium normal-case">Déclaration</span>
           </h2>
-          <p className="text-xs text-gray-500">Applicant confirmation & verification statement</p>
+          <p className="text-xs text-gray-500">Applicant confirmation & verification statement / <span className="italic">Déclaration de confirmation du candidat</span></p>
         </div>
       </div>
 
@@ -44,7 +44,7 @@ export const DeclarationSection: React.FC = () => {
             className="w-4 h-4 mt-0.5 text-[#0B1D3A] rounded border-gray-300 focus:ring-[#0B1D3A]"
           />
           <span className="text-xs text-gray-700 leading-relaxed">
-            I hereby declare that all information provided in this registration form is true, accurate, and complete to the best of my knowledge. I understand that any false statement or omission may invalidate my application for the National Security Career Development Program.
+            I hereby declare that all information provided in this registration form is true, accurate, and complete to the best of my knowledge. I understand that any false statement or omission may invalidate my application. <span className="text-gray-500 italic block mt-1">Je déclare par la présente que toutes les informations fournies dans ce formulaire d'inscription sont exactes et complètes au meilleur de mes connaissances. Je comprends que toute fausse déclaration peut invalider ma candidature.</span>
           </span>
         </label>
         {errors.declarationAccepted && (
@@ -65,11 +65,11 @@ export const DeclarationSection: React.FC = () => {
           {isSavingDraft ? (
             <span className="flex items-center gap-2">
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              Saving Application Draft...
+              Saving Application Draft... / Enregistrement...
             </span>
           ) : (
             <>
-              <span>Continue to Review</span>
+              <span>Continue to Review / Continuer</span>
               <ArrowRight className="w-4 h-4" />
             </>
           )}

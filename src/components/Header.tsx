@@ -51,8 +51,8 @@ export const Header: React.FC = () => {
       </h1>
 
       {/* Program Short Description */}
-      <p className="text-xs md:text-sm text-gray-600 max-w-xl mx-auto leading-relaxed">
-        Official online registration portal for security professionals, civil servants, and future intelligence analysts seeking advanced foundational and specialized security education.
+      <p className="text-xs md:text-sm text-gray-600 max-w-2xl mx-auto leading-relaxed">
+        Official online registration portal for security professionals, civil servants, and future intelligence analysts. <span className="text-gray-400 italic text-[11px] md:text-xs block mt-0.5 font-normal">Portail d'inscription en ligne officiel pour les professionnels de la sécurité, fonctionnaires et futurs analystes du renseignement.</span>
       </p>
     </header>
   );

@@ -47,9 +47,9 @@ export const PersonalInfo: React.FC = () => {
         </div>
         <div>
           <h2 className="text-sm font-bold tracking-wider text-[#0B1D3A] uppercase">
-            Personal Information
+            Personal Information / <span className="text-gray-500 font-medium normal-case">Informations Personnelles</span>
           </h2>
-          <p className="text-xs text-gray-500">Provide your official identification details</p>
+          <p className="text-xs text-gray-500">Provide your official identification details / <span className="italic">Fournissez vos informations d'identification officielles</span></p>
         </div>
       </div>
 
@@ -57,7 +57,7 @@ export const PersonalInfo: React.FC = () => {
         {/* First Name */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            First Name <span className="text-red-500">*</span>
+            First Name / <span className="text-gray-500 font-normal">Prénom</span> <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -76,7 +76,7 @@ export const PersonalInfo: React.FC = () => {
         {/* Middle Name */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            Middle Name
+            Middle Name / <span className="text-gray-500 font-normal">Deuxième prénom</span>
           </label>
           <input
             type="text"
@@ -90,7 +90,7 @@ export const PersonalInfo: React.FC = () => {
         {/* Surname */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            Surname <span className="text-red-500">*</span>
+            Surname / <span className="text-gray-500 font-normal">Nom de famille</span> <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -109,7 +109,7 @@ export const PersonalInfo: React.FC = () => {
         {/* Sex */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            Sex <span className="text-red-500">*</span>
+            Sex / <span className="text-gray-500 font-normal">Sexe</span> <span className="text-red-500">*</span>
           </label>
           <select
             value={personalInfo.sex}
@@ -120,10 +120,10 @@ export const PersonalInfo: React.FC = () => {
                 : 'border-gray-300 focus:border-[#0B1D3A] focus:ring-[#0B1D3A]'
             }`}
           >
-            <option value="">Select Sex</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
+            <option value="">Select Sex / Sélectionner le sexe</option>
+            <option value="Male">Male / Masculin</option>
+            <option value="Female">Female / Féminin</option>
+            <option value="Other">Other / Autre</option>
           </select>
           {errors.sex && <p className="text-[11px] text-red-500 mt-1">{errors.sex}</p>}
         </div>
@@ -131,7 +131,7 @@ export const PersonalInfo: React.FC = () => {
         {/* Date of Birth */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            Date of Birth <span className="text-red-500">*</span>
+            Date of Birth / <span className="text-gray-500 font-normal">Date de naissance</span> <span className="text-red-500">*</span>
           </label>
           <input
             type="date"
@@ -149,13 +149,13 @@ export const PersonalInfo: React.FC = () => {
         {/* Place of Birth */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            Place of Birth <span className="text-red-500">*</span>
+            Place of Birth / <span className="text-gray-500 font-normal">Lieu de naissance</span> <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
             value={personalInfo.placeOfBirth}
             onChange={(e) => updatePersonalInfo('placeOfBirth', e.target.value)}
-            placeholder="e.g. Accra"
+            placeholder="e.g. Accra / Lomé / Abidjan"
             className={`w-full text-sm px-3 py-2 border rounded-md focus:outline-none focus:ring-1 ${
               errors.placeOfBirth
                 ? 'border-red-500 focus:ring-red-500'
@@ -168,7 +168,7 @@ export const PersonalInfo: React.FC = () => {
         {/* Nationality Dropdown */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            Nationality <span className="text-red-500">*</span>
+            Nationality / <span className="text-gray-500 font-normal">Nationalité</span> <span className="text-red-500">*</span>
           </label>
           <select
             value={personalInfo.nationality || 'Ghanaian'}
@@ -179,7 +179,7 @@ export const PersonalInfo: React.FC = () => {
                 : 'border-gray-300 focus:border-[#0B1D3A] focus:ring-[#0B1D3A]'
             }`}
           >
-            <option value="">Select Nationality</option>
+            <option value="">Select Nationality / Sélectionner la nationalité</option>
             {NATIONALITIES.map((nat) => (
               <option key={nat} value={nat}>
                 {nat}
@@ -192,13 +192,13 @@ export const PersonalInfo: React.FC = () => {
         {/* National ID / Passport Number */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            National ID / Passport Number <span className="text-red-500">*</span>
+            National ID / Passport Number / <span className="text-gray-500 font-normal">N° Carte d'identité ou Passeport</span> <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
             value={personalInfo.nationalIdOrPassport}
             onChange={(e) => updatePersonalInfo('nationalIdOrPassport', e.target.value)}
-            placeholder="e.g. GHA-000000000-0"
+            placeholder="e.g. GHA-000000000-0 / C0123456"
             className={`w-full text-sm px-3 py-2 border rounded-md focus:outline-none focus:ring-1 ${
               errors.nationalIdOrPassport
                 ? 'border-red-500 focus:ring-red-500'
@@ -213,7 +213,7 @@ export const PersonalInfo: React.FC = () => {
         {/* Email */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            Email Address <span className="text-red-500">*</span>
+            Email Address / <span className="text-gray-500 font-normal">Adresse e-mail</span> <span className="text-red-500">*</span>
           </label>
           <input
             type="email"
@@ -232,7 +232,7 @@ export const PersonalInfo: React.FC = () => {
         {/* Phone Number with Country Code Dropdown & Flag Image */}
         <div className="md:col-span-3">
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            Phone Number <span className="text-red-500">*</span>
+            Phone Number / <span className="text-gray-500 font-normal">Numéro de téléphone</span> <span className="text-red-500">*</span>
           </label>
           <div className="flex gap-2 items-center">
             {/* Country Selector with Flag Image Preview */}

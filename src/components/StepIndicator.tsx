@@ -6,10 +6,10 @@ import { FormStep } from '@/types/application';
 import { FileText, CheckCircle2, CreditCard, Award } from 'lucide-react';
 
 const STEPS: { id: FormStep; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
-  { id: 'form', label: '1. Application', icon: FileText },
-  { id: 'review', label: '2. Review', icon: CheckCircle2 },
-  { id: 'payment', label: '3. Payment', icon: CreditCard },
-  { id: 'confirmation', label: '4. Confirmation', icon: Award },
+  { id: 'form', label: 'Application / Candidature', icon: FileText },
+  { id: 'review', label: 'Review / Vérification', icon: CheckCircle2 },
+  { id: 'payment', label: 'Payment / Paiement', icon: CreditCard },
+  { id: 'confirmation', label: 'Confirmation / Confirmation', icon: Award },
 ];
 
 export const StepIndicator: React.FC = () => {
