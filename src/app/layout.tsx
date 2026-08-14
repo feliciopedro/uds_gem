@@ -12,7 +12,7 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: 'National Security Career Development Program | Registration Portal',
-  description: 'Official Online Registration Portal for the National Security Career Development Program (UDS & Institute for Intelligence and Strategic Security).',
+  description: 'Official online registration portal for security professionals, civil servants, and future intelligence analysts seeking foundational, advanced or specialized education and training.',
 };
 
 export default function RootLayout({
