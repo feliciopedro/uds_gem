@@ -40,7 +40,6 @@ export const EducationInfo: React.FC = () => {
             <option value="Master's Degree">Master's Degree / Master</option>
             <option value="Doctorate (Ph.D.)">Doctorate (Ph.D.) / Doctorat</option>
             <option value="Professional Certification">Professional Certification / Certification professionnelle</option>
-            <option value="Other">Other / Autre</option>
           </select>
         </div>
 

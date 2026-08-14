@@ -9,19 +9,17 @@ const BASIC_SPECIALIZATIONS = [
   'Basic Intelligence',
   'Intelligence Analysis',
   'National Security Fundamentals',
-  'Other',
 ];
 
 const ADVANCED_SPECIALIZATIONS = [
   'Intelligence Operations',
   'National Security and Statecraft',
   'Security Risk Management',
-  'Other',
 ];
 
 export const ProgramSection: React.FC = () => {
   const { formData, updateProgram, setFormData } = useFormContext();
-  const { programType, specialization, customSpecialization } = formData;
+  const { programType, specialization } = formData;
 
   const currentOptions =
     programType === 'Basic Program' ? BASIC_SPECIALIZATIONS : ADVANCED_SPECIALIZATIONS;
@@ -148,27 +146,6 @@ export const ProgramSection: React.FC = () => {
               );
             })}
           </div>
-
-          {/* Custom specialization input if 'Other' is chosen */}
-          {specialization === 'Other' && (
-            <div className="mt-3">
-              <label className="block text-xs font-medium text-gray-700 mb-1">
-                Please specify your requested specialization area / <span className="text-gray-500">Précisez votre domaine de spécialisation</span>:
-              </label>
-              <input
-                type="text"
-                value={customSpecialization || ''}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    customSpecialization: e.target.value,
-                  }))
-                }
-                placeholder="e.g. Cybersecurity & Maritime Intelligence / Cybersécurité"
-                className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A]"
-              />
-            </div>
-          )}
         </div>
       </div>
     </section>

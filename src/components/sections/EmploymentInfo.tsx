@@ -81,7 +81,6 @@ export const EmploymentInfo: React.FC = () => {
               <option value="Civil Service / Ministry">Civil Service / Ministry / Fonction publique / Ministère</option>
               <option value="Non-Governmental Organization (NGO)">Non-Governmental Organization (NGO) / ONG</option>
               <option value="Non-Security Sector">Non-Security Sector / Secteur hors sécurité</option>
-              <option value="Other">Other / Autre</option>
             </select>
             {errors.securityOrgType && (
               <p className="text-[11px] text-red-500 mt-1 font-medium">{errors.securityOrgType}</p>
