@@ -199,15 +199,17 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Conditional Employment Info validation
     const { employmentInfo } = formData;
-    if (employmentInfo.isSecurityOfficer === 'Yes') {
-      if (!employmentInfo.securityOrgType) {
-        newErrors.securityOrgType = 'Organization Type is required for security personnel';
-      }
+    const isEmployed = employmentInfo.employmentStatus === 'Yes' || employmentInfo.employmentStatus === 'Employed' || !employmentInfo.employmentStatus;
+
+    if (isEmployed) {
       if (!employmentInfo.currentOrganization.trim()) {
-        newErrors.currentOrganization = 'Organization Name is required for security personnel';
+        newErrors.currentOrganization = 'Organization Name is required';
       }
       if (!employmentInfo.position.trim()) {
-        newErrors.position = 'Position / Rank is required for security personnel';
+        newErrors.position = 'Position / Rank is required';
+      }
+      if (employmentInfo.isSecurityOfficer === 'Yes' && !employmentInfo.securityOrgType) {
+        newErrors.securityOrgType = 'Organization Type is required for security personnel';
       }
     }
 
