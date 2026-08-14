@@ -63,8 +63,8 @@ export const PaymentStep: React.FC = () => {
           const handler = window.PaystackPop.setup({
             key: publicKey,
             email: personalInfo.email || 'applicant@nscdp.uds.edu.gh',
-            amount: applicantCategory === 'Foreign Applicant' ? 1500 : 15000,
-            currency: applicantCategory === 'Foreign Applicant' ? 'USD' : 'GHS',
+            amount: applicantCategory === 'International Applicant' ? 1500 : 15000,
+            currency: applicantCategory === 'International Applicant' ? 'USD' : 'GHS',
             ref: data.reference,
             metadata: {
               draftId: draftId || null,

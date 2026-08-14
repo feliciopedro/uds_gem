@@ -68,12 +68,12 @@ export const CategoryAndFunding: React.FC = () => {
             </div>
           </button>
 
-          {/* Foreign Applicant */}
+          {/* International Applicant */}
           <button
             type="button"
-            onClick={() => handleCategoryChange('Foreign Applicant')}
+            onClick={() => handleCategoryChange('International Applicant')}
             className={`p-3.5 border rounded-lg text-left transition-all flex flex-col justify-between ${
-              applicantCategory === 'Foreign Applicant'
+              applicantCategory === 'International Applicant'
                 ? 'border-[#0B1D3A] bg-slate-50 ring-1 ring-[#0B1D3A]'
                 : 'border-gray-200 hover:border-gray-300'
             }`}
@@ -82,11 +82,11 @@ export const CategoryAndFunding: React.FC = () => {
               <input
                 type="radio"
                 name="applicantCategory"
-                checked={applicantCategory === 'Foreign Applicant'}
-                onChange={() => handleCategoryChange('Foreign Applicant')}
+                checked={applicantCategory === 'International Applicant'}
+                onChange={() => handleCategoryChange('International Applicant')}
                 className="w-4 h-4 text-[#0B1D3A] focus:ring-[#0B1D3A]"
               />
-              <span className="text-sm font-bold text-[#0B1D3A]">Foreign Applicant</span>
+              <span className="text-sm font-bold text-[#0B1D3A]">International Applicant</span>
             </div>
             <div className="mt-3 pt-2 border-t border-gray-200/60 flex items-center justify-between">
               <span className="text-xs text-gray-500 font-medium">Application Fee:</span>

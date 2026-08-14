@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS applications (
     course VARCHAR(150) NOT NULL, -- Specialization choice
 
     -- Category & Funding
-    applicant_category VARCHAR(50) NOT NULL, -- 'Local Applicant' | 'Foreign Applicant'
+    applicant_category VARCHAR(50) NOT NULL, -- 'Local Applicant' | 'International Applicant'
     funding_source VARCHAR(100) NOT NULL, -- 'Self Funded' | 'Employer Sponsored'
 
     -- Server-Calculated Fee & Status

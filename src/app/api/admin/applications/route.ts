@@ -53,7 +53,7 @@ const SAMPLE_APPLICATIONS = [
     motivation: 'Desire to build specialized expertise in regional security risk management.',
     program_level: 'Advanced Program',
     course: 'Security Risk Management',
-    applicant_category: 'Foreign Applicant',
+    applicant_category: 'International Applicant',
     funding_source: 'Self Funded',
     application_fee_amount: 15.0,
     application_fee_currency: 'USD',
@@ -162,7 +162,7 @@ export async function GET(req: NextRequest) {
       (a) => a.applicant_category === 'Local Applicant'
     ).length;
     const foreignApplicants = applicationsList.filter(
-      (a) => a.applicant_category === 'Foreign Applicant'
+      (a) => a.applicant_category === 'International Applicant' || a.applicant_category === 'Foreign Applicant'
     ).length;
 
     // Calculate Total Application Fees (GHS and USD)

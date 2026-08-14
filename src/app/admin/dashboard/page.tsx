@@ -103,7 +103,9 @@ export default function AdminDashboardPage() {
       programFilter === 'All' || app.program_level === programFilter;
 
     const matchesCategory =
-      categoryFilter === 'All' || app.applicant_category === categoryFilter;
+      categoryFilter === 'All' ||
+      app.applicant_category === categoryFilter ||
+      (categoryFilter === 'International Applicant' && app.applicant_category === 'Foreign Applicant');
 
     const matchesPayment =
       paymentFilter === 'All' || app.payment_status === paymentFilter;
@@ -354,7 +356,7 @@ export default function AdminDashboardPage() {
             >
               <option value="All">All Categories</option>
               <option value="Local Applicant">Local Applicant</option>
-              <option value="Foreign Applicant">Foreign Applicant</option>
+              <option value="International Applicant">International Applicant</option>
             </select>
 
             {/* Payment Status Filter */}

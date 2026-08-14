@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
       motivation: motivationStatement?.trim() || '',
       program_level: programType || 'Basic Program',
       course: courseChoice,
-      applicant_category: isLocal ? 'Local Applicant' : 'Foreign Applicant',
+      applicant_category: isLocal ? 'Local Applicant' : 'International Applicant',
       funding_source: modeOfFunding || 'Self Funded',
 
       // Server-Enforced Fee & Status

@@ -1,7 +1,7 @@
 export type ProgramLevel = 'Basic Program' | 'Advanced Program';
 export type ProgramType = ProgramLevel;
 
-export type ApplicantCategory = 'Local Applicant' | 'Foreign Applicant';
+export type ApplicantCategory = 'Local Applicant' | 'International Applicant';
 
 export type ModeOfFunding = 'Self Funded' | 'Employer Sponsored';
 
