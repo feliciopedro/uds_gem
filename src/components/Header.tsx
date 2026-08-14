@@ -18,7 +18,7 @@ export const Header: React.FC = () => {
             <span className="block text-[11px] font-bold tracking-wider text-[#0B1D3A]">
               UNIVERSITY FOR
             </span>
-            <span className="block text-[10px] text-gray-500 font-medium">
+            <span className="block text-[10px] font-bold tracking-wider text-[#0B1D3A]">
               DEVELOPMENT STUDIES
             </span>
           </div>
@@ -38,7 +38,7 @@ export const Header: React.FC = () => {
             <span className="block text-[11px] font-bold tracking-wider text-[#0B1D3A]">
               INSTITUTE FOR INTELLIGENCE
             </span>
-            <span className="block text-[10px] text-gray-500 font-medium">
+            <span className="block text-[10px] font-bold tracking-wider text-[#0B1D3A]">
               & STRATEGIC SECURITY
             </span>
           </div>
