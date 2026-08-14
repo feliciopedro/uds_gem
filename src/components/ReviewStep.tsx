@@ -189,34 +189,38 @@ export const ReviewStep: React.FC = () => {
               {employmentInfo.employmentStatus === 'No' ? 'No' : 'Yes'}
             </span>
           </div>
-          <div>
-            <span className="block text-gray-500 font-medium">Security Professional</span>
-            <span className="font-semibold text-gray-800">
-              {employmentInfo.isSecurityOfficer || 'No'}
-            </span>
-          </div>
-          <div>
-            <span className="block text-gray-500 font-medium">Organization Type</span>
-            <span className="font-semibold text-gray-800">
-              {employmentInfo.securityOrgType || 'N/A'}
-            </span>
-          </div>
-          <div>
-            <span className="block text-gray-500 font-medium">Current Organization</span>
-            <span className="font-semibold text-gray-800">
-              {employmentInfo.currentOrganization || 'N/A'}
-            </span>
-          </div>
-          <div>
-            <span className="block text-gray-500 font-medium">Position / Rank</span>
-            <span className="font-semibold text-gray-800">{employmentInfo.position || 'N/A'}</span>
-          </div>
-          <div>
-            <span className="block text-gray-500 font-medium">Employment Date</span>
-            <span className="font-semibold text-gray-800">
-              {employmentInfo.employmentDate || 'N/A'}
-            </span>
-          </div>
+          {employmentInfo.employmentStatus !== 'No' && (
+            <>
+              <div>
+                <span className="block text-gray-500 font-medium">Security Professional</span>
+                <span className="font-semibold text-gray-800">
+                  {employmentInfo.isSecurityOfficer || 'No'}
+                </span>
+              </div>
+              <div>
+                <span className="block text-gray-500 font-medium">Organization Type</span>
+                <span className="font-semibold text-gray-800">
+                  {employmentInfo.securityOrgType || 'N/A'}
+                </span>
+              </div>
+              <div>
+                <span className="block text-gray-500 font-medium">Current Organization</span>
+                <span className="font-semibold text-gray-800">
+                  {employmentInfo.currentOrganization || 'N/A'}
+                </span>
+              </div>
+              <div>
+                <span className="block text-gray-500 font-medium">Position / Rank</span>
+                <span className="font-semibold text-gray-800">{employmentInfo.position || 'N/A'}</span>
+              </div>
+              <div>
+                <span className="block text-gray-500 font-medium">Employment Date</span>
+                <span className="font-semibold text-gray-800">
+                  {employmentInfo.employmentDate || 'N/A'}
+                </span>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
