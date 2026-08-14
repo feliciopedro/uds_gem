@@ -27,15 +27,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Motivation Statement Minimum 250 Words Check
+    // Motivation Statement Maximum 250 Words Check
     const motivationWords = (motivationStatement || '')
       .trim()
       .split(/\s+/)
       .filter((w: string) => w.length > 0).length;
 
-    if (!motivationStatement?.trim() || motivationWords < 250) {
+    if (!motivationStatement?.trim()) {
       return NextResponse.json(
-        { error: `Motivation statement is required and must be at least 250 words (currently ${motivationWords} words).` },
+        { error: 'Motivation statement is required.' },
+        { status: 400 }
+      );
+    }
+
+    if (motivationWords > 250) {
+      return NextResponse.json(
+        { error: `Motivation statement cannot exceed 250 words (currently ${motivationWords} words).` },
         { status: 400 }
       );
     }

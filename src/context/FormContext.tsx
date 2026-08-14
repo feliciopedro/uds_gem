@@ -182,7 +182,7 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     if (!personalInfo.phone.trim()) newErrors.phone = 'Phone Number is required';
 
-    // Motivation statement minimum 250 words check
+    // Motivation statement maximum 250 words check
     const wordCount = motivationStatement.trim() === ''
       ? 0
       : motivationStatement
@@ -192,8 +192,8 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (!motivationStatement.trim()) {
       newErrors.motivationStatement = 'Motivation statement is required';
-    } else if (wordCount < 250) {
-      newErrors.motivationStatement = `Motivation statement must be at least 250 words (currently ${wordCount} words, ${250 - wordCount} more words required)`;
+    } else if (wordCount > 250) {
+      newErrors.motivationStatement = `Motivation statement cannot exceed 250 words (currently ${wordCount} words)`;
     }
 
     // Conditional Employment Info validation
