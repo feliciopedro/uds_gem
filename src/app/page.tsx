@@ -13,26 +13,9 @@ export default function Home() {
   const { currentStep } = useFormContext();
 
   return (
-    <main className="min-h-screen bg-slate-100 py-4 sm:py-8 px-3 sm:px-4 relative overflow-x-hidden">
-      {/* Side Ghana Flag Ribbon Accents (Visible on desktop & tablet screens) */}
-      <div className="hidden lg:block fixed top-12 left-2 xl:left-8 w-44 xl:w-60 pointer-events-none z-10 select-none opacity-90 transition-all">
-        <img
-          src="/ghana-flag-ribbon.png"
-          alt="Ghana Flag Ribbon Accent"
-          className="w-full h-auto object-contain drop-shadow-lg transform -rotate-12"
-        />
-      </div>
-
-      <div className="hidden lg:block fixed top-12 right-2 xl:right-8 w-44 xl:w-60 pointer-events-none z-10 select-none opacity-90 transition-all">
-        <img
-          src="/ghana-flag-ribbon.png"
-          alt="Ghana Flag Ribbon Accent"
-          className="w-full h-auto object-contain drop-shadow-lg transform scale-x-[-1] rotate-12"
-        />
-      </div>
-
+    <main className="min-h-screen bg-slate-100 py-4 sm:py-8 px-3 sm:px-4">
       {/* Centered Container (Max Width ~750px) */}
-      <div className="max-w-[750px] mx-auto bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden relative z-20">
+      <div className="max-w-[750px] mx-auto bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
         {/* Institutional Header */}
         <Header />
 

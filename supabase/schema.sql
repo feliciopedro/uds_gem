@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS applications (
     national_id_passport VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL,
     phone VARCHAR(50) NOT NULL,
+    alt_phone VARCHAR(50),
 
     -- Educational Information
     highest_education VARCHAR(100) NOT NULL,

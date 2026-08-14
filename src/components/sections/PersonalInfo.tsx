@@ -9,9 +9,9 @@ export const PersonalInfo: React.FC = () => {
   const { formData, updatePersonalInfo, errors } = useFormContext();
   const { personalInfo } = formData;
 
-  // Extract country dial code and local phone number from personalInfo.phone
-  const getParsedPhone = () => {
-    const raw = personalInfo.phone || '';
+  // Extract country dial code and local phone number for primary & alternative phone
+  const parsePhoneNumber = (rawPhone: string) => {
+    const raw = rawPhone || '';
     const matched = COUNTRY_CODES.find((item) => raw.startsWith(item.code));
     if (matched) {
       return {
@@ -27,7 +27,8 @@ export const PersonalInfo: React.FC = () => {
     };
   };
 
-  const { selectedCountry, countryCode, localPhone } = getParsedPhone();
+  const { selectedCountry, countryCode, localPhone } = parsePhoneNumber(personalInfo.phone || '');
+  const { selectedCountry: altSelectedCountry, countryCode: altCountryCode, localPhone: altLocalPhone } = parsePhoneNumber(personalInfo.altPhone || '');
 
   const handleCountryCodeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newCode = e.target.value;
@@ -37,6 +38,16 @@ export const PersonalInfo: React.FC = () => {
   const handleLocalPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newLocal = e.target.value;
     updatePersonalInfo('phone', `${countryCode} ${newLocal}`.trim());
+  };
+
+  const handleAltCountryCodeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newCode = e.target.value;
+    updatePersonalInfo('altPhone', `${newCode} ${altLocalPhone}`.trim());
+  };
+
+  const handleAltLocalPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newLocal = e.target.value;
+    updatePersonalInfo('altPhone', `${altCountryCode} ${newLocal}`.trim());
   };
 
   return (
@@ -229,10 +240,10 @@ export const PersonalInfo: React.FC = () => {
           {errors.email && <p className="text-[11px] text-red-500 mt-1">{errors.email}</p>}
         </div>
 
-        {/* Phone Number with Country Code Dropdown & Flag Image */}
-        <div className="md:col-span-3">
+        {/* Primary Phone Number */}
+        <div className="md:col-span-3 lg:col-span-1.5">
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            Phone Number / <span className="text-gray-500 font-normal">Numéro de téléphone</span> <span className="text-red-500">*</span>
+            Primary Phone Number / <span className="text-gray-500 font-normal">Téléphone principal</span> <span className="text-red-500">*</span>
           </label>
           <div className="flex gap-2 items-center">
             {/* Country Selector with Flag Image Preview */}
@@ -272,6 +283,46 @@ export const PersonalInfo: React.FC = () => {
             />
           </div>
           {errors.phone && <p className="text-[11px] text-red-500 mt-1">{errors.phone}</p>}
+        </div>
+
+        {/* Alternative Phone / WhatsApp Number */}
+        <div className="md:col-span-3 lg:col-span-1.5">
+          <label className="block text-xs font-semibold text-gray-700 mb-1">
+            Alternative Phone / WhatsApp / <span className="text-gray-500 font-normal">Téléphone secondaire (WhatsApp)</span>
+          </label>
+          <div className="flex gap-2 items-center">
+            {/* Country Selector with Flag Image Preview */}
+            <div className="flex items-center bg-slate-50 border border-gray-300 rounded-md px-2.5 py-1.5 focus-within:ring-1 focus-within:ring-[#0B1D3A] focus-within:border-[#0B1D3A]">
+              <img
+                src={`https://flagcdn.com/w40/${altSelectedCountry.iso}.png`}
+                alt={altSelectedCountry.name}
+                className="w-5 h-3.5 object-cover rounded-xs mr-1.5 border border-gray-200"
+                onError={(e) => {
+                  (e.currentTarget as HTMLElement).style.display = 'none';
+                }}
+              />
+              <select
+                value={altCountryCode}
+                onChange={handleAltCountryCodeChange}
+                className="text-sm bg-transparent font-semibold text-gray-800 focus:outline-none cursor-pointer pr-1"
+              >
+                {COUNTRY_CODES.map((item) => (
+                  <option key={`alt-${item.iso}-${item.code}-${item.name}`} value={item.code}>
+                    {item.flag} {item.code}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Local Phone Number Input */}
+            <input
+              type="tel"
+              value={altLocalPhone}
+              onChange={handleAltLocalPhoneChange}
+              placeholder="e.g. 50 000 0000"
+              className="flex-1 text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A]"
+            />
+          </div>
         </div>
       </div>
     </section>

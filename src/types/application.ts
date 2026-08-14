@@ -18,6 +18,7 @@ export interface PersonalInfo {
   nationalIdOrPassport: string;
   email: string;
   phone: string;
+  altPhone?: string;
 }
 
 export interface EducationInfo {
@@ -66,6 +67,7 @@ export interface SupabaseApplicationRow {
   national_id_passport: string;
   email: string;
   phone: string;
+  alt_phone?: string | null;
 
   highest_education: string;
   school_attended: string;

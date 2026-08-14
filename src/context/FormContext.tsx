@@ -20,6 +20,7 @@ const INITIAL_FORM_DATA: ApplicationFormData = {
     nationalIdOrPassport: '',
     email: '',
     phone: '',
+    altPhone: '',
   },
   educationInfo: {
     highestEducationLevel: 'Bachelor\'s Degree',

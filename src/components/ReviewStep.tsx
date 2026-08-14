@@ -108,9 +108,15 @@ export const ReviewStep: React.FC = () => {
             <span className="font-semibold text-gray-800">{personalInfo.email || 'N/A'}</span>
           </div>
           <div>
-            <span className="block text-gray-500 font-medium">Phone Number</span>
+            <span className="block text-gray-500 font-medium">Primary Phone</span>
             <span className="font-semibold text-gray-800">{personalInfo.phone || 'N/A'}</span>
           </div>
+          {personalInfo.altPhone && (
+            <div>
+              <span className="block text-gray-500 font-medium">Alt. Phone / WhatsApp</span>
+              <span className="font-semibold text-gray-800">{personalInfo.altPhone}</span>
+            </div>
+          )}
         </div>
       </div>
 

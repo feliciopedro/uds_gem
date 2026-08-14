@@ -64,6 +64,7 @@ export async function POST(req: NextRequest) {
       national_id_passport: personalInfo.nationalIdOrPassport?.trim() || 'N/A',
       email: personalInfo.email.trim().toLowerCase(),
       phone: personalInfo.phone.trim(),
+      alt_phone: personalInfo.altPhone?.trim() || null,
 
       highest_education: educationInfo?.highestEducationLevel || 'N/A',
       school_attended: educationInfo?.schoolAttended?.trim() || 'N/A',
