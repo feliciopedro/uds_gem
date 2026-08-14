@@ -11,7 +11,7 @@ export interface PersonalInfo {
   firstName: string;
   middleName: string;
   surname: string;
-  sex: 'Male' | 'Female' | 'Other' | '';
+  sex: 'Male' | 'Female' | 'Prefer not to say' | '';
   dateOfBirth: string;
   placeOfBirth: string;
   nationality: string;

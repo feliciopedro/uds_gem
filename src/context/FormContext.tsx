@@ -168,7 +168,7 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (!personalInfo.firstName.trim()) newErrors.firstName = 'First Name is required';
     if (!personalInfo.surname.trim()) newErrors.surname = 'Surname is required';
-    if (!personalInfo.sex) newErrors.sex = 'Sex is required';
+    if (!personalInfo.sex) newErrors.sex = 'Gender is required';
     if (!personalInfo.dateOfBirth) newErrors.dateOfBirth = 'Date of Birth is required';
     if (!personalInfo.placeOfBirth.trim()) newErrors.placeOfBirth = 'Place of Birth is required';
     if (!personalInfo.nationality.trim()) newErrors.nationality = 'Nationality is required';

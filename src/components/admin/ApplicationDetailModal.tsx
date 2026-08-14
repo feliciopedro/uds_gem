@@ -93,7 +93,7 @@ export const ApplicationDetailModal: React.FC<ApplicationDetailModalProps> = ({
                 <span className="font-bold text-gray-900">{fullName}</span>
               </div>
               <div>
-                <span className="block text-gray-500 font-medium">Sex</span>
+                <span className="block text-gray-500 font-medium">Gender</span>
                 <span className="font-semibold text-gray-800">{application.sex}</span>
               </div>
               <div>

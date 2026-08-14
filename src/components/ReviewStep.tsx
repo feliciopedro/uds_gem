@@ -82,7 +82,7 @@ export const ReviewStep: React.FC = () => {
             </span>
           </div>
           <div>
-            <span className="block text-gray-500 font-medium">Sex</span>
+            <span className="block text-gray-500 font-medium">Gender / <span className="font-normal text-gray-400">Genre</span></span>
             <span className="font-semibold text-gray-800">{personalInfo.sex || 'N/A'}</span>
           </div>
           <div>

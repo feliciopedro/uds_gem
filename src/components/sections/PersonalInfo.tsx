@@ -106,10 +106,10 @@ export const PersonalInfo: React.FC = () => {
           {errors.surname && <p className="text-[11px] text-red-500 mt-1">{errors.surname}</p>}
         </div>
 
-        {/* Sex */}
+        {/* Gender */}
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1">
-            Sex / <span className="text-gray-500 font-normal">Sexe</span> <span className="text-red-500">*</span>
+            Gender / <span className="text-gray-500 font-normal">Genre</span> <span className="text-red-500">*</span>
           </label>
           <select
             value={personalInfo.sex}
@@ -120,10 +120,10 @@ export const PersonalInfo: React.FC = () => {
                 : 'border-gray-300 focus:border-[#0B1D3A] focus:ring-[#0B1D3A]'
             }`}
           >
-            <option value="">Select Sex / Sélectionner le sexe</option>
+            <option value="">Select Gender / Sélectionner le genre</option>
             <option value="Male">Male / Masculin</option>
             <option value="Female">Female / Féminin</option>
-            <option value="Other">Other / Autre</option>
+            <option value="Prefer not to say">Prefer not to say / Préfère ne pas préciser</option>
           </select>
           {errors.sex && <p className="text-[11px] text-red-500 mt-1">{errors.sex}</p>}
         </div>
