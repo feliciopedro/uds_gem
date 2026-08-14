@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS applications (
 
     -- Employment Details
     security_professional VARCHAR(20) NOT NULL DEFAULT 'No', -- 'Yes' | 'No'
+    employment_status VARCHAR(100) DEFAULT 'Employed',
     security_organization_type VARCHAR(100),
     organization_name VARCHAR(255),
     organization_country VARCHAR(100),

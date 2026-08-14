@@ -31,6 +31,7 @@ export interface EducationInfo {
 }
 
 export interface EmploymentInfo {
+  employmentStatus?: string;
   isSecurityOfficer: 'Yes' | 'No' | '';
   securityOrgType: string;
   currentOrganization: string;
@@ -77,6 +78,7 @@ export interface SupabaseApplicationRow {
   qualification: string;
 
   security_professional: string; // 'Yes' | 'No'
+  employment_status?: string | null;
   security_organization_type?: string | null;
   organization_name?: string | null;
   organization_country?: string | null;

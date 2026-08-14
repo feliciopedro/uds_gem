@@ -81,6 +81,7 @@ export async function POST(req: NextRequest) {
       qualification: educationInfo?.qualificationAwarded?.trim() || 'N/A',
 
       security_professional: employmentInfo?.isSecurityOfficer === 'Yes' ? 'Yes' : 'No',
+      employment_status: employmentInfo?.employmentStatus || 'Employed',
       security_organization_type: employmentInfo?.securityOrgType || null,
       organization_name: employmentInfo?.currentOrganization?.trim() || null,
       organization_country: employmentInfo?.country?.trim() || null,

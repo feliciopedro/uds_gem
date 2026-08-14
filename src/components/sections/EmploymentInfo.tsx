@@ -25,6 +25,25 @@ export const EmploymentInfo: React.FC = () => {
       </div>
 
       <div className="space-y-4">
+        {/* Current Employment Status (On Top) */}
+        <div className="bg-slate-50 p-3.5 border border-slate-200 rounded-md">
+          <label className="block text-xs font-bold text-[#0B1D3A] mb-2">
+            Current Employment Status / <span className="text-gray-600 font-medium">Statut d'emploi actuel</span> <span className="text-red-500">*</span>
+          </label>
+          <select
+            value={employmentInfo.employmentStatus || 'Employed'}
+            onChange={(e) => updateEmploymentInfo('employmentStatus', e.target.value)}
+            className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:border-[#0B1D3A] focus:ring-[#0B1D3A] bg-white text-gray-800 font-medium"
+          >
+            <option value="Employed">Employed / Employé(e)</option>
+            <option value="Self-Employed">Self-Employed / Indépendant(e)</option>
+            <option value="Civil / Public Servant">Civil / Public Servant / Fonctionnaire</option>
+            <option value="Unemployed">Unemployed / Sans emploi</option>
+            <option value="Student">Student / Étudiant(e)</option>
+            <option value="Retired">Retired / Retraité(e)</option>
+          </select>
+        </div>
+
         {/* Are you a security officer/professional? */}
         <div className="bg-slate-50 p-3.5 border border-slate-200 rounded-md">
           <label className="block text-xs font-bold text-[#0B1D3A] mb-2">

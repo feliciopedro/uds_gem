@@ -184,6 +184,12 @@ export const ReviewStep: React.FC = () => {
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
           <div>
+            <span className="block text-gray-500 font-medium">Employment Status</span>
+            <span className="font-semibold text-gray-800">
+              {employmentInfo.employmentStatus || 'Employed'}
+            </span>
+          </div>
+          <div>
             <span className="block text-gray-500 font-medium">Security Professional</span>
             <span className="font-semibold text-gray-800">
               {employmentInfo.isSecurityOfficer || 'No'}
