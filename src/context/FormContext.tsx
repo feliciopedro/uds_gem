@@ -63,6 +63,7 @@ interface FormContextType {
   submitApplicationForReview: () => Promise<boolean>;
   proceedToPayment: () => void;
   completeSimulatedPayment: () => Promise<void>;
+  verifyPaystackPayment: (reference: string, activeDraftId?: string) => Promise<boolean>;
   resetForm: () => void;
   errors: Record<string, string>;
   isSavingDraft: boolean;
@@ -322,6 +323,57 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const verifyPaystackPayment = async (reference: string, activeDraftId?: string): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/paystack/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reference,
+          draftId: activeDraftId || draftId,
+          phone: formData.personalInfo.phone,
+          firstName: formData.personalInfo.firstName,
+        }),
+      });
+
+      const result = await response.json();
+      if (response.ok && result.success) {
+        const appNum = result.applicationNumber || `NSCD-${new Date().getFullYear()}-00001`;
+        const dataHash = result.dataHash || '';
+        const submittedAt = result.submittedAt || new Date().toISOString();
+
+        const feeCurrency: 'GHS' | 'USD' =
+          serverFee?.currency || (formData.applicantCategory === 'Local Applicant' ? 'GHS' : 'USD');
+        const feeAmount =
+          serverFee?.amount || (formData.applicantCategory === 'Local Applicant' ? 150 : 15);
+
+        const recordPayload = {
+          ...formData,
+          id: activeDraftId || draftId || undefined,
+          applicationNumber: appNum,
+          submittedAt,
+          feeCurrency,
+          feeAmount,
+          paymentStatus: 'paid' as const,
+          applicationStatus: 'submitted' as const,
+        };
+
+        const record: ApplicationRecord = {
+          ...recordPayload,
+          dataHash: dataHash || (await generateSHA256Hash(recordPayload)),
+        };
+
+        setSubmittedRecord(record);
+        setCurrentStep('confirmation');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return true;
+      }
+    } catch (e) {
+      console.warn('Paystack verification error:', e);
+    }
+    return false;
+  };
+
   const resetForm = () => {
     setFormData(INITIAL_FORM_DATA);
     setCurrentStep('form');
@@ -348,6 +400,7 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
         submitApplicationForReview,
         proceedToPayment,
         completeSimulatedPayment,
+        verifyPaystackPayment,
         resetForm,
         errors,
         isSavingDraft,

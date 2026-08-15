@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useFormContext } from '@/context/FormContext';
 import { Header } from '@/components/Header';
 import { StepIndicator } from '@/components/StepIndicator';
@@ -9,11 +10,32 @@ import { ReviewStep } from '@/components/ReviewStep';
 import { PaymentStep } from '@/components/PaymentStep';
 import { ConfirmationStep } from '@/components/ConfirmationStep';
 
+function PaystackCallbackHandler() {
+  const searchParams = useSearchParams();
+  const { verifyPaystackPayment } = useFormContext();
+
+  useEffect(() => {
+    const isCallback = searchParams.get('payment_callback') === 'true';
+    const reference = searchParams.get('reference') || searchParams.get('trxref');
+    const draftId = searchParams.get('draftId') || undefined;
+
+    if ((isCallback || reference) && reference) {
+      verifyPaystackPayment(reference, draftId);
+    }
+  }, [searchParams, verifyPaystackPayment]);
+
+  return null;
+}
+
 export default function Home() {
   const { currentStep } = useFormContext();
 
   return (
     <main className="min-h-screen bg-slate-100 py-4 sm:py-8 px-3 sm:px-4">
+      <Suspense fallback={null}>
+        <PaystackCallbackHandler />
+      </Suspense>
+
       {/* Centered Container (Max Width ~750px) */}
       <div className="max-w-[750px] mx-auto bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
         {/* Institutional Header */}

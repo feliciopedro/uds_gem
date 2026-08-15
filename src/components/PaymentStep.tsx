@@ -38,12 +38,31 @@ export const PaymentStep: React.FC = () => {
     setPaymentError('');
 
     try {
-      // 1. Initialize Paystack Transaction via Server API
+      // 1. Save/update application draft first
+      let activeDraftId = draftId;
+      try {
+        const draftRes = await fetch('/api/applications/draft', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...formData,
+            draftId,
+          }),
+        });
+        const draftData = await draftRes.json();
+        if (draftData?.draftId) {
+          activeDraftId = draftData.draftId;
+        }
+      } catch (draftErr) {
+        console.warn('Draft save notice before payment:', draftErr);
+      }
+
+      // 2. Initialize Paystack Transaction via Server API
       const response = await fetch('/api/paystack/initialize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          draftId,
+          draftId: activeDraftId,
           email: personalInfo.email,
           applicantCategory,
         }),
@@ -52,65 +71,15 @@ export const PaymentStep: React.FC = () => {
       const data = await response.json();
 
       if (response.ok && data.success && data.authorization_url) {
-        // Load Paystack Inline JS
-        const scriptLoaded = await loadPaystackScript();
-
-        const publicKey =
-          process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY ||
-          'pk_test_ff1c8839a07718b5527123ceec8184ec21480c7d';
-
-        if (scriptLoaded && window.PaystackPop) {
-          const handler = window.PaystackPop.setup({
-            key: publicKey,
-            email: personalInfo.email || 'applicant@nscdp.uds.edu.gh',
-            amount: applicantCategory === 'International Applicant' ? 1500 : 15000,
-            currency: applicantCategory === 'International Applicant' ? 'USD' : 'GHS',
-            ref: data.reference,
-            metadata: {
-              draftId: draftId || null,
-              applicant_name: `${personalInfo.firstName} ${personalInfo.surname}`,
-              phone: personalInfo.phone,
-            },
-            onClose: () => {
-              setIsProcessing(false);
-              setPaymentError('Payment window closed before completing transaction.');
-            },
-            callback: async (response: any) => {
-              console.log('Paystack Inline Success Callback:', response);
-              // Verify payment on server
-              const verifyRes = await fetch('/api/paystack/verify', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  reference: response.reference || data.reference,
-                  draftId,
-                  phone: personalInfo.phone,
-                  firstName: personalInfo.firstName,
-                }),
-              });
-
-              const verifyData = await verifyRes.json();
-              if (verifyRes.ok && verifyData.success) {
-                await completeSimulatedPayment();
-              } else {
-                setPaymentError(verifyData.error || 'Payment verification failed.');
-              }
-              setIsProcessing(false);
-            },
-          });
-          handler.openIframe();
-        } else {
-          // Fallback to Paystack Standard Authorization URL redirect
-          window.location.href = data.authorization_url;
-        }
+        // Direct redirect to Paystack's official secure payment page
+        window.location.href = data.authorization_url;
       } else {
-        // Fallback simulation mode
-        await completeSimulatedPayment();
+        setPaymentError(data.error || 'Failed to initialize Paystack payment. Please check your network and try again.');
         setIsProcessing(false);
       }
     } catch (err: any) {
-      console.warn('Paystack trigger exception, using fallback:', err);
-      await completeSimulatedPayment();
+      console.error('Paystack initialization trigger error:', err);
+      setPaymentError('Unable to connect to Paystack payment gateway. Please check your connection and try again.');
       setIsProcessing(false);
     }
   };

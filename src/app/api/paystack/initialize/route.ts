@@ -31,12 +31,15 @@ export async function POST(req: NextRequest) {
 
     const applicantEmail = draftRecord?.email || email || 'applicant@nscdp.uds.edu.gh';
     const reference = `NSCDP_PAY_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    const origin = req.headers.get('origin') || req.headers.get('referer') || 'http://localhost:3000';
+    const callbackUrl = `${origin}/?payment_callback=true&draftId=${draftId || ''}`;
 
     const paystackPayload = {
       email: applicantEmail,
       amount: amountInSubunits,
       currency: currency,
       reference: reference,
+      callback_url: callbackUrl,
       metadata: {
         draftId: draftId || null,
         applicant_category: category,
