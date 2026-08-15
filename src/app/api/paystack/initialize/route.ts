@@ -9,16 +9,20 @@ export async function POST(req: NextRequest) {
     const secretKey =
       process.env.PAYSTACK_SECRET_KEY || 'sk_test_c5b66af85943253b646795b9261022a5a2c80d5e';
 
-    const supabase = getSupabaseServerClient();
     let draftRecord: any = null;
 
     if (draftId) {
-      const { data } = await supabase
-        .from('applications')
-        .select('*')
-        .eq('id', draftId)
-        .single();
-      if (data) draftRecord = data;
+      try {
+        const supabase = getSupabaseServerClient();
+        const { data } = await supabase
+          .from('applications')
+          .select('*')
+          .eq('id', draftId)
+          .single();
+        if (data) draftRecord = data;
+      } catch (dbErr) {
+        console.warn('Supabase fetch notice in Paystack initialize:', dbErr);
+      }
     }
 
     // Determine category and fee in sub-units
@@ -31,8 +35,17 @@ export async function POST(req: NextRequest) {
 
     const applicantEmail = draftRecord?.email || email || 'applicant@nscdp.uds.edu.gh';
     const reference = `NSCDP_PAY_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-    const origin = req.headers.get('origin') || req.headers.get('referer') || 'http://localhost:3000';
-    const callbackUrl = `${origin}/?payment_callback=true&draftId=${draftId || ''}`;
+
+    const host = req.headers.get('host') || '';
+    const proto = req.headers.get('x-forwarded-proto') || 'https';
+    let baseUrl = req.headers.get('origin') || req.headers.get('referer') || '';
+    if (!baseUrl && host) {
+      baseUrl = `${proto}://${host}`;
+    }
+    if (!baseUrl || baseUrl.endsWith('/')) {
+      baseUrl = baseUrl ? baseUrl.slice(0, -1) : 'http://localhost:3000';
+    }
+    const callbackUrl = `${baseUrl}/?payment_callback=true&draftId=${draftId || ''}`;
 
     const paystackPayload = {
       email: applicantEmail,

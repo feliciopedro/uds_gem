@@ -19,12 +19,16 @@ export async function POST(req: NextRequest) {
     // 1. Retrieve existing draft record
     let draftRecord: any = null;
     if (draftId) {
-      const { data } = await supabase
-        .from('applications')
-        .select('*')
-        .eq('id', draftId)
-        .single();
-      if (data) draftRecord = data;
+      try {
+        const { data } = await supabase
+          .from('applications')
+          .select('*')
+          .eq('id', draftId)
+          .single();
+        if (data) draftRecord = data;
+      } catch (dbErr) {
+        console.warn('Supabase fetch notice in Paystack verify:', dbErr);
+      }
     }
 
     // 2. Prevent duplicate processing if already submitted & SMS sent
@@ -140,17 +144,21 @@ export async function POST(req: NextRequest) {
 
     // 7. Update Supabase Application Record
     if (draftId) {
-      await supabase
-        .from('applications')
-        .update({
-          application_number: appNumber,
-          payment_status: 'paid',
-          application_status: 'submitted',
-          sms_status: finalSmsStatus,
-          data_hash: newHash,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', draftId);
+      try {
+        await supabase
+          .from('applications')
+          .update({
+            application_number: appNumber,
+            payment_status: 'paid',
+            application_status: 'submitted',
+            sms_status: finalSmsStatus,
+            data_hash: newHash,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', draftId);
+      } catch (dbUpdateErr) {
+        console.warn('Supabase update notice in Paystack verify:', dbUpdateErr);
+      }
     }
 
     // 8. Append Immutable Audit Log Entry

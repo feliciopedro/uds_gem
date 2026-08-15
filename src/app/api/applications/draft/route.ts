@@ -113,34 +113,43 @@ export async function POST(req: NextRequest) {
     let savedRow = null;
 
     if (savedId) {
-      // Upsert existing draft
-      const { data, error } = await supabase
-        .from('applications')
-        .upsert({ id: savedId, ...rowPayload })
-        .select('*')
-        .single();
+      try {
+        // Upsert existing draft
+        const { data, error } = await supabase
+          .from('applications')
+          .upsert({ id: savedId, ...rowPayload })
+          .select('*')
+          .single();
 
-      if (!error && data) {
-        savedRow = data;
+        if (!error && data) {
+          savedRow = data;
+        }
+      } catch (upsertErr) {
+        console.warn('Supabase upsert notice:', upsertErr);
       }
     }
 
     if (!savedRow) {
-      // Insert new draft application
-      const { data, error } = await supabase
-        .from('applications')
-        .insert(rowPayload)
-        .select('*')
-        .single();
+      try {
+        // Insert new draft application
+        const { data, error } = await supabase
+          .from('applications')
+          .insert(rowPayload)
+          .select('*')
+          .single();
 
-      if (error) {
-        console.error('Supabase Insert Error (Fallback Mock Active if DB unconfigured):', error.message);
-        // Fallback response for unconfigured/mock Supabase environment
+        if (error) {
+          console.error('Supabase Insert Error (Fallback Mock Active):', error.message);
+          savedId = draftId || 'draft_' + Math.random().toString(36).substring(2, 10);
+          savedRow = { id: savedId, ...rowPayload, created_at: new Date().toISOString() };
+        } else {
+          savedId = data.id;
+          savedRow = data;
+        }
+      } catch (insertErr) {
+        console.warn('Supabase insert exception notice:', insertErr);
         savedId = draftId || 'draft_' + Math.random().toString(36).substring(2, 10);
         savedRow = { id: savedId, ...rowPayload, created_at: new Date().toISOString() };
-      } else {
-        savedId = data.id;
-        savedRow = data;
       }
     }
 
