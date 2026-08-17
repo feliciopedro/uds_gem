@@ -8,7 +8,7 @@ import { BookOpen, ShieldAlert, Award } from 'lucide-react';
 const BASIC_SPECIALIZATIONS = [
   'Basic Intelligence',
   'Intelligence Analysis',
-  'National Security Fundamentals',
+  'National Security Foundations',
 ];
 
 const ADVANCED_SPECIALIZATIONS = [

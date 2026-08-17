@@ -144,7 +144,7 @@ export const PaymentStep: React.FC = () => {
             <span>Supported Payment Methods</span>
           </div>
           <p className="text-blue-800 leading-relaxed">
-            Paystack accepts Mobile Money (MTN MoMo, Telecel Cash, AT Money) and Visa / Mastercard debit & credit cards. Upon successful payment verification, your unique application number (**NSCD-2026-XXXXX**) will be assigned and confirmation SMS dispatched via mNotify.
+            Paystack accepts Mobile Money (MTN MoMo, Telecel Cash, AT Money) and all local & international Visa / Mastercard cards. Upon successful payment verification, your unique application number (NSCD-2026-XXXXX) will be assigned and a confirmation SMS will be sent to your phone.
           </p>
         </div>
 

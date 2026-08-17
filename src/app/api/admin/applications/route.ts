@@ -114,7 +114,7 @@ const SAMPLE_APPLICATIONS = [
     position: 'Foreign Service Officer',
     motivation: 'Understanding national security fundamentals for diplomatic career advancement.',
     program_level: 'Basic Program',
-    course: 'National Security Fundamentals',
+    course: 'National Security Foundations',
     applicant_category: 'Local Applicant',
     funding_source: 'Employer Sponsored',
     application_fee_amount: 150.0,

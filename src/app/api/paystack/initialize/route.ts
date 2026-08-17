@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
 
     console.log('Initializing Paystack Transaction:', paystackPayload);
 
-    const paystackResponse = await fetch('https://api.paystack.co/transaction/initialize', {
+    let paystackResponse = await fetch('https://api.paystack.co/transaction/initialize', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${secretKey}`,
@@ -72,8 +72,55 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify(paystackPayload),
     });
 
-    const data = await paystackResponse.json();
+    let data = await paystackResponse.json();
     console.log('Paystack Initialize API Response:', data);
+
+    // Fallback logic: If Paystack rejects USD (e.g. merchant account only accepts GHS), retry with GHS equivalent for international card processing
+    if (!data.status && isInternational) {
+      console.warn('Paystack USD transaction failed or currency unsupported by merchant. Retrying with GHS equivalent...');
+
+      const usdToGhsRate = Number(process.env.USD_TO_GHS_RATE) || 16;
+      const ghsEquivalent = Math.round(15 * usdToGhsRate); // e.g. GHS 240
+      const ghsSubunits = ghsEquivalent * 100; // 24000 pesewas
+
+      const fallbackPayload = {
+        ...paystackPayload,
+        currency: 'GHS',
+        amount: ghsSubunits,
+        metadata: {
+          ...paystackPayload.metadata,
+          original_currency: 'USD',
+          original_amount: 15,
+          exchange_rate_used: usdToGhsRate,
+          note: 'Converted to GHS for Paystack processing',
+        },
+      };
+
+      const fallbackResponse = await fetch('https://api.paystack.co/transaction/initialize', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${secretKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(fallbackPayload),
+      });
+
+      const fallbackData = await fallbackResponse.json();
+      console.log('Paystack Fallback GHS Response:', fallbackData);
+
+      if (fallbackResponse.ok && fallbackData.status) {
+        return NextResponse.json({
+          success: true,
+          authorization_url: fallbackData.data.authorization_url,
+          access_code: fallbackData.data.access_code,
+          reference: fallbackData.data.reference,
+          amount: ghsEquivalent,
+          currency: 'GHS',
+        });
+      } else {
+        data = fallbackData;
+      }
+    }
 
     if (paystackResponse.ok && data.status) {
       return NextResponse.json({

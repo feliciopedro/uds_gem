@@ -146,7 +146,7 @@ export const ApplicationDetailModal: React.FC<ApplicationDetailModalProps> = ({
                 <span className="font-semibold text-gray-800">{application.funding_source}</span>
               </div>
               <div>
-                <span className="block text-gray-500 font-medium">mNotify SMS Status</span>
+                <span className="block text-gray-500 font-medium">SMS Status</span>
                 <span className="font-semibold text-emerald-700">{application.sms_status || 'N/A'}</span>
               </div>
               <div>

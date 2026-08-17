@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     const newHash = await generateSHA256Hash(updatedPayload);
     updatedPayload.data_hash = newHash;
 
-    // 5. DISPATCH mNOTIFY SMS NOTIFICATION
+    // 5. DISPATCH SMS NOTIFICATION
     let finalSmsStatus: 'sent' | 'failed' = 'failed';
     const recipientPhone = draftRecord?.phone || body.phone || body.recipientPhone;
     const firstName = draftRecord?.first_name || body.firstName || 'Applicant';
@@ -91,11 +91,11 @@ export async function POST(req: NextRequest) {
         if (smsResult.success) {
           finalSmsStatus = 'sent';
         } else {
-          console.warn(`mNotify SMS dispatch failed for ${appNumber}:`, smsResult.error);
+          console.warn(`SMS dispatch failed for ${appNumber}:`, smsResult.error);
           finalSmsStatus = 'failed';
         }
       } catch (smsError) {
-        console.error(`mNotify SMS dispatch exception for ${appNumber}:`, smsError);
+        console.error(`SMS dispatch exception for ${appNumber}:`, smsError);
         finalSmsStatus = 'failed';
       }
     }
