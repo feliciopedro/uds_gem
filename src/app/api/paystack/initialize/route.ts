@@ -1,6 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServerClient } from '@/lib/supabaseClient';
 
+async function fetchLiveUsdToGhsRate(): Promise<number> {
+  try {
+    const res = await fetch('https://open.er-api.com/v6/latest/USD', {
+      cache: 'no-store',
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const rate = data?.rates?.GHS;
+      if (typeof rate === 'number' && rate > 0) {
+        console.log(`Live USD -> GHS rate fetched: 1 USD = GHS ${rate}`);
+        return rate;
+      }
+    }
+  } catch (err) {
+    console.warn('Could not fetch live exchange rate, using default fallback rate:', err);
+  }
+  return Number(process.env.USD_TO_GHS_RATE) || 16.0;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -75,13 +94,13 @@ export async function POST(req: NextRequest) {
     let data = await paystackResponse.json();
     console.log('Paystack Initialize API Response:', data);
 
-    // Fallback logic: If Paystack rejects USD (e.g. merchant account only accepts GHS), retry with GHS equivalent for international card processing
+    // Fallback logic: If Paystack rejects USD (e.g. merchant account only accepts GHS), retry with GHS equivalent using live exchange rate
     if (!data.status && isInternational) {
-      console.warn('Paystack USD transaction failed or currency unsupported by merchant. Retrying with GHS equivalent...');
+      console.warn('Paystack USD transaction failed or currency unsupported by merchant. Fetching live exchange rate for GHS conversion...');
 
-      const usdToGhsRate = Number(process.env.USD_TO_GHS_RATE) || 16;
-      const ghsEquivalent = Math.round(15 * usdToGhsRate); // e.g. GHS 240
-      const ghsSubunits = ghsEquivalent * 100; // 24000 pesewas
+      const usdToGhsRate = await fetchLiveUsdToGhsRate();
+      const ghsEquivalent = Math.round(15 * usdToGhsRate * 100) / 100; // Calculated with daily rate
+      const ghsSubunits = Math.round(ghsEquivalent * 100); // amount in pesewas
 
       const fallbackPayload = {
         ...paystackPayload,
@@ -91,8 +110,8 @@ export async function POST(req: NextRequest) {
           ...paystackPayload.metadata,
           original_currency: 'USD',
           original_amount: 15,
-          exchange_rate_used: usdToGhsRate,
-          note: 'Converted to GHS for Paystack processing',
+          daily_exchange_rate_used: usdToGhsRate,
+          note: `Converted $15 USD to GHS ${ghsEquivalent} at daily rate (${usdToGhsRate} GHS/USD)`,
         },
       };
 
