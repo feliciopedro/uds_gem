@@ -212,7 +212,9 @@ export const ReviewStep: React.FC = () => {
                 </span>
               </div>
               <div>
-                <span className="block text-gray-500 font-medium">Position / Rank</span>
+                <span className="block text-gray-500 font-medium">
+                  {employmentInfo.isSecurityOfficer === 'Yes' ? 'Position / Rank' : 'Position / Role'}
+                </span>
                 <span className="font-semibold text-gray-800">{employmentInfo.position || 'N/A'}</span>
               </div>
               <div>

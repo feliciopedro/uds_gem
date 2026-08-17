@@ -72,7 +72,9 @@ export const EmploymentInfo: React.FC = () => {
                     name="isSecurityOfficer"
                     value="Yes"
                     checked={employmentInfo.isSecurityOfficer === 'Yes'}
-                    onChange={(e) => updateEmploymentInfo('isSecurityOfficer', e.target.value)}
+                    onChange={(e) => {
+                      updateEmploymentInfo('isSecurityOfficer', e.target.value);
+                    }}
                     className="w-4 h-4 text-[#0B1D3A] focus:ring-[#0B1D3A]"
                   />
                   Yes / Oui
@@ -83,7 +85,10 @@ export const EmploymentInfo: React.FC = () => {
                     name="isSecurityOfficer"
                     value="No"
                     checked={employmentInfo.isSecurityOfficer === 'No'}
-                    onChange={(e) => updateEmploymentInfo('isSecurityOfficer', e.target.value)}
+                    onChange={(e) => {
+                      updateEmploymentInfo('isSecurityOfficer', e.target.value);
+                      updateEmploymentInfo('securityOrgType', '');
+                    }}
                     className="w-4 h-4 text-[#0B1D3A] focus:ring-[#0B1D3A]"
                   />
                   No / Non
@@ -134,7 +139,11 @@ export const EmploymentInfo: React.FC = () => {
                   type="text"
                   value={employmentInfo.currentOrganization}
                   onChange={(e) => updateEmploymentInfo('currentOrganization', e.target.value)}
-                  placeholder="e.g. Ghana Armed Forces / Ministry / Company"
+                  placeholder={
+                    isSecurity
+                      ? "e.g. Ghana Armed Forces / Police Service / Security Agency"
+                      : "e.g. Ministry of Foreign Affairs / Commercial Bank / University / Company"
+                  }
                   className={`w-full text-sm px-3 py-2 border rounded-md focus:outline-none focus:ring-1 ${
                     errors.currentOrganization
                       ? 'border-red-500 focus:ring-red-500'
@@ -149,13 +158,22 @@ export const EmploymentInfo: React.FC = () => {
               {/* Position */}
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">
-                  Current Position / Rank / <span className="text-gray-500 font-normal">Poste actuel / Grade</span> <span className="text-red-500">*</span>
+                  {isSecurity ? (
+                    <>Current Position / Rank / <span className="text-gray-500 font-normal">Poste actuel / Grade</span></>
+                  ) : (
+                    <>Current Position / Role / <span className="text-gray-500 font-normal">Poste actuel / Rôle</span></>
+                  )}{' '}
+                  <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={employmentInfo.position}
                   onChange={(e) => updateEmploymentInfo('position', e.target.value)}
-                  placeholder="e.g. Intelligence Analyst / Officer / Specialist"
+                  placeholder={
+                    isSecurity
+                      ? "e.g. Intelligence Officer / Security Supervisor / Inspector"
+                      : "e.g. Administrative Officer / Project Manager / Accountant / Specialist"
+                  }
                   className={`w-full text-sm px-3 py-2 border rounded-md focus:outline-none focus:ring-1 ${
                     errors.position
                       ? 'border-red-500 focus:ring-red-500'
